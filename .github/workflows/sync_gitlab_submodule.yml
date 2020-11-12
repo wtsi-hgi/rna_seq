@@ -18,5 +18,6 @@ jobs:
         git clone git@gitlab.internal.sanger.ac.uk:hgi-projects/nextflow_ci.git
         cd nextflow_ci
         ls -ltra . 
+        git branch -a
         echo branch is $GITHUB_REF
-        git show-ref --verify --quiet  $GITHUB_REF || echo branch to create && exit 0
+        git show-ref --verify --quiet  $GITHUB_REF
