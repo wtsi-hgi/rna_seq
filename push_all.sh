@@ -1,1 +1,1 @@
-git add * && git add .github/* && git commit -m "auto" && git push -u origin
+git add * && git add .github/* && git commit -m "auto_github" && git push -u origin
