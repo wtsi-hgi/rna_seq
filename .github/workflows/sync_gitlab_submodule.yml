@@ -1,10 +1,21 @@
-name: Clone a remote repo
-env:
-  DEPLOY_KEY: ${{ secrets.NEXTFLOW_CI_KEY }}
-  GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
-run: |
-    eval "$(ssh-agent -s)"
-    ssh-add - <<< "${DEPLOY_KEY}"
-    git clone git@gitlab.internal.sanger.ac.uk:hgi-projects/nextflow_ci.git
-    cd nextflow_ci
-    ls -ltra . 
+name: sync submodule gitlab
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: sync submodule gitlab
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone a remote repo
+      env:
+        DEPLOY_KEY: ${{ secrets.NEXTFLOW_CI_KEY }}
+        GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
+      run: |
+        eval "$(ssh-agent -s)"
+        ssh-add - <<< "${DEPLOY_KEY}"
+        git clone git@gitlab.internal.sanger.ac.uk:hgi-projects/nextflow_ci.git
+        cd nextflow_ci
+        ls -ltra . 
