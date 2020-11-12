@@ -21,6 +21,8 @@ jobs:
         git branch -a
         echo branch is $GITHUB_REF
         git show-ref --verify --quiet $GITHUB_REF && echo branch exists 
+        git config --get remote.origin.url
         git pull --recurse-submodules
         git submodule update --remote --recursive
+        git submodule update --init --recursive --remote
         git add nextflow_ci && git commit -m "add submodule" && git push -u origin
