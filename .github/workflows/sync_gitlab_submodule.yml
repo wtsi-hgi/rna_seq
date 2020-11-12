@@ -1,5 +1,7 @@
 name: sync submodule gitlab
 
+on: [push]
+
 jobs:
   build:
     name: sync submodule gitlab
