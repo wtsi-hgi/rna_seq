@@ -12,6 +12,8 @@ jobs:
         DEPLOY_KEY: ${{ secrets.NEXTFLOW_CI_KEY }}
         GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
       run: |
+        echo $GITHUB_HEAD_REF
+        echo $GITHUB_REF
         eval "$(ssh-agent -s)"
         ssh-add - <<< "${DEPLOY_KEY}"
         git clone git@gitlab.internal.sanger.ac.uk:hgi-projects/nextflow_ci.git
