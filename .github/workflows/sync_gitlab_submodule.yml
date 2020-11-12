@@ -12,11 +12,11 @@ jobs:
         DEPLOY_KEY: ${{ secrets.NEXTFLOW_CI_KEY }}
         GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
       run: |
-        echo $GITHUB_HEAD_REF
-        echo $GITHUB_REF
         eval "$(ssh-agent -s)"
         ssh-add - <<< "${DEPLOY_KEY}"
         rm -rf nextflow_ci
         git clone git@gitlab.internal.sanger.ac.uk:hgi-projects/nextflow_ci.git
         cd nextflow_ci
         ls -ltra . 
+        export branch=$(echo $GITHUB_HEAD_REF | awk -F'/' '{print $(NF)}')
+        echo branch is $branch
