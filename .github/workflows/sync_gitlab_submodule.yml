@@ -20,4 +20,4 @@ jobs:
         ls -ltra . 
         git branch -a
         echo branch is $GITHUB_REF
-        git show-ref --verify --quiet  $GITHUB_REF
+        git show-ref --verify --quiet  $GITHUB_REF || branch to create && exit 0
