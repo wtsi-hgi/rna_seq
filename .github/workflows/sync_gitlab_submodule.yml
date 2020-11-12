@@ -1,4 +1,4 @@
-- name: Clone a remote repo
+name: Clone a remote repo
   env:
     DEPLOY_KEY: ${{ secrets.NEXTFLOW_CI_KEY }}
     GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
