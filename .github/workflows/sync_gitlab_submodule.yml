@@ -17,12 +17,12 @@ jobs:
         rm -rf nextflow_ci
         git clone git@gitlab.internal.sanger.ac.uk:hgi-projects/nextflow_ci.git
         cd nextflow_ci
-        ls -ltra . 
-        git branch -a
-        echo branch is $GITHUB_REF
-        git show-ref --verify --quiet $GITHUB_REF && echo branch exists 
-        git config --get remote.origin.url
-        git pull --recurse-submodules
-        git submodule update --remote --recursive
+        git fetch --all
+        export BRANCH=$(echo $GITHUB_REF | sed s/^refs\\/heads\\///g)
+        echo full ref is $GITHUB_REF and branch is $BRANCH
+        git show-ref --verify --quiet $GITHUB_REF && git checkout $BRANCH || \
+          (git checkout -b $BRANCH template)
+        git config --file=.gitmodules submodule.Submod.branch $BRANCH
+        git submodule sync
         git submodule update --init --recursive --remote
-        git add nextflow_ci && git commit --allow-empty -m "add submodule; ${{ github.event.head_commit.message }}" && git push -u origin
+        git add nextflow_ci && git commit --allow-empty -m "add submodule; ${{ github.event.head_commit.message }}; branch $BRANCH" && git push -u origin
