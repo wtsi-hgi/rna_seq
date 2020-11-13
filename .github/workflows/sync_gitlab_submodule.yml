@@ -22,6 +22,9 @@ jobs:
         echo full ref is $GITHUB_REF and branch is $BRANCH
         git show-ref --verify --quiet $GITHUB_REF && git checkout $BRANCH || \
           (git checkout -b $BRANCH template)
+        git pull
+        git submodule sync
+        git submodule update --init --recursive --remote
         git config --file=.gitmodules submodule.Submod.branch $BRANCH
         git submodule sync
         git submodule update --init --recursive --remote
