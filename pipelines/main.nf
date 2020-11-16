@@ -15,9 +15,9 @@ params.input_samples_csv = "${baseDir}/../../inputs/samples.tsv"
 params.copy_mode = "move" // choose symlink, move or copy to stage in results dir
 
 params.dropqc = ''
-include baton_study from '../modules/irods_fetch/baton_study.nf' params(run: true, outdir: params.outdir, dropqc: params.dropqc)
-include iget_sample_study from '../modules/irods_fetch/iget_sample_study.nf' params(run: true, outdir: params.outdir, copy_mode: params.copy_mode)
-include iget_sample from '../modules/irods_fetch/iget_sample.nf' params(run: true, outdir: params.outdir, copy_mode: params.copy_mode)
+include baton_study from '../modules/baton_study.nf' params(run: true, outdir: params.outdir, dropqc: params.dropqc)
+include iget_sample_study from '../modules/iget_sample_study.nf' params(run: true, outdir: params.outdir, copy_mode: params.copy_mode)
+include iget_sample from '../modules/iget_sample.nf' params(run: true, outdir: params.outdir, copy_mode: params.copy_mode)
 
 workflow {
     
