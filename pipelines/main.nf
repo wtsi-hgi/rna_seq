@@ -1,20 +1,5 @@
 nextflow.preview.dsl=2
 
-// burkina faso study
-// SEQCAP_WGS_GDAP_Burkino_Faso 2971
-
-// ghana studies
-// SEQCAP_WGS_GDAP_GHANA 3180
-// GDAP_XTEN 3257
-// GDAP_10x_Zulu_Ashanti 3779
-
-params.run_from_studies = true // if true, will use study ids to find & fetch Irods cram files:
-ch_input_studies = Channel.from('2971','3180','3257','3779')
-// if false, will use samples listed in samples.tsv:
-params.input_samples_csv = "${baseDir}/../../inputs/samples.tsv"
-params.copy_mode = "move" // choose symlink, move or copy to stage in results dir
-
-params.dropqc = ''
 include baton_study from '../modules/baton_study.nf' params(run: true, outdir: params.outdir, dropqc: params.dropqc)
 include iget_sample_study from '../modules/iget_sample_study.nf' params(run: true, outdir: params.outdir, copy_mode: params.copy_mode)
 include iget_sample from '../modules/iget_sample.nf' params(run: true, outdir: params.outdir, copy_mode: params.copy_mode)
