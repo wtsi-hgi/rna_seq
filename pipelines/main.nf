@@ -7,6 +7,7 @@ include iget_sample_study from '../modules/iget_sample_study.nf' params(run: tru
 include iget_sample from '../modules/iget_sample.nf' params(run: true, outdir: params.outdir, copy_mode: params.copy_mode)
 
 workflow {
+    ch_input_studies = Channel.from('2971','3180','3257','3779')
     
     // multiple study_ids allowed
     if (params.run_from_studies) {
