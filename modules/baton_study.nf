@@ -4,11 +4,11 @@ process baton_study {
     publishDir "${params.outdir}/samples/study_id_${study_id}/", mode: 'copy', pattern: "samples_noduplicates.tsv", overwrite: true
 
     input: 
-    val study_id
+    val(study_id)
 
     output: 
-    tuple val(study_id), file('samples.tsv'), emit: samples_tsv
-    tuple val(study_id), file('samples_noduplicates.tsv'), emit: samples_noduplicates_tsv
+    tuple val(study_id), path('samples.tsv'), emit: samples_tsv
+    tuple val(study_id), path('samples_noduplicates.tsv'), emit: samples_noduplicates_tsv
 
     script:
     """

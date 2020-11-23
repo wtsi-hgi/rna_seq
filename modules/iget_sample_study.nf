@@ -1,24 +1,12 @@
-params.run = true
-params.copy_mode = "symlink"
-
 process 'iget_sample_study' {
     tag "$sample"
-    memory = '3G'
-    time '120m'
-    cpus 1
-    maxForks 12
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'ignore' }
-    maxRetries 3
     publishDir "${params.outdir}/iget/${study_id}/${sample}/", mode: "${params.copy_mode}"
-
-    when:
-    params.run 
 
     input:
     tuple val(sample), val(study_id)
     
   output:
-    tuple sample, file("*.cram"), file ("*.crai"), emit: sample_cram_crai optional true
+    tuple val(sample), path("*.cram"), path("*.crai"), emit: sample_cram_crai optional true
 
   script:
     """
