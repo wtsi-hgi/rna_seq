@@ -1,5 +1,7 @@
 nextflow.preview.dsl=2
 
+// read all inputs from inputs.nf from upstream gitlab repo (at same branch name).
+
 include baton_study from '../modules/baton_study.nf' params(run: true, outdir: params.outdir, dropqc: params.dropqc)
 include iget_sample_study from '../modules/iget_sample_study.nf' params(run: true, outdir: params.outdir, copy_mode: params.copy_mode)
 include iget_sample from '../modules/iget_sample.nf' params(run: true, outdir: params.outdir, copy_mode: params.copy_mode)
