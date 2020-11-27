@@ -44,6 +44,11 @@ workflow run_from_irods_tsv {
 	    tuple(study_id, sample, cellranger_irods_object)}
 			  .filter { it[2] != "cellranger_irods_not_found" })
 
+    // work dirs to remove because they are Irods searches:
+    //imeta_study_cellranger.out.work_dir_to_remove.view()
+
+    emit:
+    imeta_study_cellranger.out.work_dir_to_remove
 }
 
 // TODO:  here or main.nf:   // store work dirs to remove into tsv file for onComplete removal.

@@ -1,5 +1,5 @@
 process gsheet_to_csv {
-    tag "gsheet"
+    tag "${gsheet}"
     publishDir "${params.outdir}/imeta_study/study_id_${study_id}/", mode: 'copy', pattern: "samples.tsv", overwrite: true
     publishDir "${params.outdir}/imeta_study/study_id_${study_id}/", mode: 'copy', pattern: "samples_noduplicates.tsv", overwrite: true
     

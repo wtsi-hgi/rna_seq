@@ -37,14 +37,15 @@ workflow {
 	samples_irods_tsv = imeta_samples_csv.out.irods_samples_tsv
 	work_dir_to_remove = imeta_samples_csv.out.work_dir_to_remove.mix(gsheet_to_csv.out.work_dir_to_remove) }
 
-//	imeta_study_cellranger.out.work_dir_to_remove
-//	    .filter { it != "dont_remove" })
-//	.collectFile(name: 'irods_work_dirs_to_remove.csv', newLine: true, sort: true,
-//		     storeDir:params.outdir)
-//	    .out.irods_samples_tsv }
-    
     // common to all input modes:
     run_from_irods_tsv(samples_irods_tsv)
+
+    // list work dirs to remove (because they are Irods searches, so need to always rerun on each NF run):
+    // these are removed on workflow.onComplete if (params.on_complete_uncache_irods_search), see below.
+    run_from_irods_tsv.out.mix(work_dir_to_remove)
+	.filter { it != "dont_remove" }
+	.collectFile(name: 'irods_work_dirs_to_remove.csv', newLine: true, sort: true,
+		     storeDir:params.outdir)
 }
 
 workflow.onError {
@@ -54,18 +55,18 @@ workflow.onComplete {
     log.info "Pipeline completed at: $workflow.complete"
     log.info "Command line: $workflow.commandLine"
     log.info "Execution status: ${ workflow.success ? 'OK' : 'failed' }"
-//    
-//    if (params.on_complete_uncache_irods_search) {
-//	log.info "You have selected \"on_complete_uncache_irods_search = true\"; will therefore attempt to remove Irods work dirs to forcefully uncache them even if successful."
-//	if (! file("${params.outdir}/irods_work_dirs_to_remove.csv").isEmpty()) {
-//	    log.info "file ${params.outdir}/irods_work_dirs_to_remove.csv exists and not empty ..."
-//	    file("${params.outdir}/irods_work_dirs_to_remove.csv")
-//		.eachLine {  work_dir ->
-//		if (file(work_dir).isDirectory()) {
-//		    log.info "removing work dir $work_dir ..."
-//		    file(work_dir).deleteDir()   
-//		} } } }
-//    
+    
+    if (params.on_complete_uncache_irods_search) {
+	log.info "You have selected \"on_complete_uncache_irods_search = true\"; will therefore attempt to remove Irods work dirs to forcefully uncache them even if successful."
+	if (! file("${params.outdir}/irods_work_dirs_to_remove.csv").isEmpty()) {
+	    log.info "file ${params.outdir}/irods_work_dirs_to_remove.csv exists and not empty ..."
+	    file("${params.outdir}/irods_work_dirs_to_remove.csv")
+		.eachLine {  work_dir ->
+		if (file(work_dir).isDirectory()) {
+		    log.info "removing work dir $work_dir ..."
+		    file(work_dir).deleteDir()   
+		} } } }
+    
     if (params.on_complete_remove_workdir_failed_tasks) {
 	log.info "You have selected \"on_complete_remove_workdir_failed_tasks = true\"; will therefore remove work dirs of all tasks that failed (.exitcode file not 0)."
 	// work dir and other paths are hardcoded here ... :

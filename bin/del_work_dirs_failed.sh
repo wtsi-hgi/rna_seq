@@ -13,7 +13,7 @@ else
 	   -exec cat {} \; -exec echo ,{} \; | \
 	  sed s'/\/.exitcode /\n/'g | sed s'/\/.exitcode//'g | \
 	  grep -v '^0,' | sed s'/^[0-9]*,//'g | \
-	  xargs rm -r
+	  xargs --no-run-if-empty rm -r
       echo find and remove done.
 fi
 
