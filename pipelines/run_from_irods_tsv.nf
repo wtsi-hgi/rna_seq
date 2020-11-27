@@ -44,8 +44,32 @@ workflow run_from_irods_tsv {
 	    tuple(study_id, sample, cellranger_irods_object)}
 			  .filter { it[2] != "cellranger_irods_not_found" })
 
-    // work dirs to remove because they are Irods searches:
-    //imeta_study_cellranger.out.work_dir_to_remove.view()
+    // prepare Lelands' pipeline inputs
+    // --file_paths_10x    Tab-delimited file containing experiment_id and
+    //                        path_data_10xformat columns.
+    // prepare Lelands' pipeline input
+    // --file_metadata     Tab-delimited file containing sample metadata.
+    if (params.run_mode == "google_spreadsheet") {
+	file_paths_10x_name = params.google_spreadsheet_mode.
+	input_gsheet_name.replaceAll(/ /, "_") + ".file_paths_10x.tsv"
+	file_metadata_name = params.google_spreadsheet_mode.
+	input_gsheet_name.replaceAll(/ /, "_") + ".file_metadata.tsv" }
+    else {
+	file_paths_10x_name = "file_paths_10x.tsv"
+	file_metadata_name = "file_metadata.tsv" }
+
+    iget_study_cellranger.out.cellranger_output_dir
+	.map{sample, cellranger_output_dir  ->
+	"${sample}\t${cellranger_output_dir}/filtered_feature_bc_matrix\t${sample}"}
+	.collectFile(name: file_paths_10x_name, 
+		     newLine: true, sort: true,
+		     seed: "experiment_id\tdata_path_10x_format\tshort_experiment_id",
+		     storeDir:params.outdir)
+
+    iget_study_cellranger.out.cellranger_metadata_tsv
+	.collectFile(name: file_metadata_name, 
+		     newLine: false, sort: true, keepHeader: true,
+		     storeDir:params.outdir)
 
     emit:
     imeta_study_cellranger.out.work_dir_to_remove

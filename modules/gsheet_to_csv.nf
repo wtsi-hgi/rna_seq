@@ -1,7 +1,6 @@
 process gsheet_to_csv {
     tag "${gsheet}"
-    publishDir "${params.outdir}/imeta_study/study_id_${study_id}/", mode: 'copy', pattern: "samples.tsv", overwrite: true
-    publishDir "${params.outdir}/imeta_study/study_id_${study_id}/", mode: 'copy', pattern: "samples_noduplicates.tsv", overwrite: true
+    publishDir "${params.outdir}/", mode: 'copy', pattern: "${output_csv_name}", overwrite: true
     
     when: 
     params.google_spreadsheet_mode.run_gsheet_to_csv
