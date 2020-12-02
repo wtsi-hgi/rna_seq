@@ -25,8 +25,8 @@ workflow run_from_irods_tsv {
 
     // task to merge cram files of each sample and convert them to fastq
     // merge by study_id and sample (Irods sanger_sample_id)
-    // crams_to_fastq(iget_study_cram.out.study_sample_cram.groupTuple(by: [0,1])
-    iget_study_cram.out.study_sample_cram.groupTuple(by: [0,1]).view()
+    crams_to_fastq(iget_study_cram.out.study_sample_cram.groupTuple(by: [0,1]))
+    // iget_study_cram.out.study_sample_cram.groupTuple(by: [0,1]).view()
     
     // task to search Irods cellranger location for each sample:
     imeta_study_cellranger(
