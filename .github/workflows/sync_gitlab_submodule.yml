@@ -28,7 +28,7 @@ jobs:
         git submodule update --init --recursive --remote
         git config --file=.gitmodules submodule.Submod.branch $BRANCH
         sed -i s"/branch = template/branch = $BRANCH/"g .gitmodules
-        git add .gitmodules && git commit --allow-empty "fixed .gitmodules" && git push -u origin
+        git add .gitmodules && git commit --allow-empty -m "fixed .gitmodules" && git push -u origin
         git submodule sync
         git submodule update --init --recursive --remote
         git add nextflow_ci && git add .gitmodules && git commit --allow-empty -m "add submodule; ${{ github.event.head_commit.message }}; branch $BRANCH" && git push -u origin
