@@ -7,7 +7,7 @@ jobs:
     name: sync submodule gitlab
     runs-on: self-hosted
     steps:
-    - name: Clone a remote repo
+    - name: sync submodule gitlab 
       env:
         DEPLOY_KEY: ${{ secrets.NEXTFLOW_CI_KEY }}
         GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
