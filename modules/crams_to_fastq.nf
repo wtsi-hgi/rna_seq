@@ -12,8 +12,8 @@ process crams_to_fastq {
     output: 
     tuple val(study_id), val(sample), path("*.fastq.gz"), emit: study_sample_fastqs
     tuple val(study_id), val(sample), path("${study_id}.${sample}_merged.cram"), emit: study_sample_mergedcram
-    path('*.lostcause.txt'), emit: lostcause optional true 
-    path('*.numreads.txt'), emit: numreads optional true 
+    path('*.lostcause.tsv'), emit: lostcause optional true 
+    path('*.numreads.tsv'), emit: numreads optional true 
     env(study_id), emit: study_id
 
     script:
@@ -31,7 +31,8 @@ process crams_to_fastq {
                               # -O {stdout} -u {no compression}
                               # -N {always append /1 and /2 to the read name}
                               # -F 0x900 (bit 1, 8, filter secondary and supplementary reads)
-      echo -e "${study_id}\\t${sample}\\t\${numreads}" > ${study_id}.${sample}.numreads.txt
+      echo -e "study_id\\tsample\\tnumreads" > ${study_id}.${sample}.numreads.tsv
+      echo -e "${study_id}\\t${sample}\\t\${numreads}" >> ${study_id}.${sample}.numreads.tsv
       samtools collate    \\
           -O -u           \\
           -@ ${task.cpus} \\
@@ -45,7 +46,8 @@ process crams_to_fastq {
       sleep 2
       find . -name \"*.fastq.gz\" -type 'f' -size -160k -delete
     else
-      echo -e "${study_id}\\t${sample}\\t\${numreads}" > ${study_id}.${sample}.lostcause.txt
+      echo -e "study_id\\tsample\\tnumreads" > ${study_id}.${sample}.lostcause.tsv
+      echo -e "${study_id}\\t${sample}\\t\${numreads}" >> ${study_id}.${sample}.lostcause.tsv
     fi
 
     study_id=gsheet
