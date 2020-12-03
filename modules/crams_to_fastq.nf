@@ -11,7 +11,7 @@ process crams_to_fastq {
 
     output: 
     tuple val(study_id), val(sample), path("*.fastq.gz"), emit: study_sample_fastqs
-    tuple val(study_id), val(sample), path("${cramfile}"), emit: study_sample_mergedcram
+    tuple val(study_id), val(sample), path("${study_id}.${sample}_merged.cram"), emit: study_sample_mergedcram
     path('*.lostcause.txt') optional true 
     path('numreads.txt') optional true 
     env(study_id), emit: study_id
