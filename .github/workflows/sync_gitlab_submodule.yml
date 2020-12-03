@@ -21,7 +21,7 @@ jobs:
         export BRANCH=$(echo $GITHUB_REF | sed s/^refs\\/heads\\///g)
         echo full ref is $GITHUB_REF and branch is $BRANCH
         git show-ref --verify --quiet $GITHUB_REF && git checkout $BRANCH || \
-          (git checkout -b $BRANCH template)
+          (git checkout -b $BRANCH template && git push origin $BRANCH:$BRANCH)
         git pull
         git submodule sync
         git submodule update --init --recursive --remote
