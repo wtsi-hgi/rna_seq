@@ -21,8 +21,9 @@ jobs:
         git pull
         export BRANCH=$(echo $GITHUB_REF | sed s/^refs\\/heads\\///g)
         echo full ref is $GITHUB_REF and branch is $BRANCH
-        git show-ref --verify --quiet $GITHUB_REF && git checkout $BRANCH || \
-          (git checkout -b $BRANCH template && git push origin $BRANCH:$BRANCH)
+        git show-ref --verify $GITHUB_REF && (echo branch exists && git checkout $BRANCH) || \
+          (echo branch does not exist && git checkout -b $BRANCH template && git push origin $BRANCH:$BRANCH)
+        echo checked out branch
         git branch --set-upstream-to=origin/$BRANCH $BRANCH
         git pull
         git submodule sync
