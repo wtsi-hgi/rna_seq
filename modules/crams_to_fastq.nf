@@ -27,7 +27,7 @@ process crams_to_fastq {
     f2=${study_id}.${sample}_2.fastq.gz
     f0=${study_id}.${sample}.fastq.gz
     numreads=\$(samtools view -c -F 0x900 $cramfile)
-    if (( numreads >= ${params.min_reads} )); then
+    if (( \$numreads >= ${params.crams_to_fastq_min_reads} )); then
                               # -O {stdout} -u {no compression}
                               # -N {always append /1 and /2 to the read name}
                               # -F 0x900 (bit 1, 8, filter secondary and supplementary reads)
