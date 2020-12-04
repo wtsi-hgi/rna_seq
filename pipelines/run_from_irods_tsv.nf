@@ -77,10 +77,10 @@ workflow run_from_irods_tsv {
 
     iget_study_cellranger.out.cellranger_output_dir
 	.map{sample, cellranger_output_dir  ->
-	"${sample}\t${cellranger_output_dir}/filtered_feature_bc_matrix\t${sample}"}
+	"${sample}\t${cellranger_output_dir}/filtered_feature_bc_matrix\t${sample}\tNA\tNA"}
 	.collectFile(name: file_paths_10x_name, 
 		     newLine: true, sort: true,
-		     seed: "experiment_id\tdata_path_10x_format\tshort_experiment_id",
+		     seed: "experiment_id\tdata_path_10x_format\tshort_experiment_id\tncells_expected\tndroplets_include_cellbender",
 		     storeDir:params.outdir)
 
     iget_study_cellranger.out.cellranger_metadata_tsv
