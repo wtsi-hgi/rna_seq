@@ -21,8 +21,8 @@ echo \"${cellranger_irods_object}\" > cellranger_${sample}/irods_cellranger_path
 RESULTS_DIR=${params.outdir}/iget_study_cellranger/${study_id}/${sample}/cellranger_${sample}
 
 # prepare metadata tsv row for that sample:
-echo sample_sanger_id,irods_cellranger_path > metadata1.csv 
-echo ${sample},${cellranger_irods_object} >> metadata1.csv 
+echo sample_sanger_id,experiment_id,irods_cellranger_path > metadata1.csv 
+echo ${sample},${sample},${cellranger_irods_object} >> metadata1.csv 
 cat cellranger_${sample}/metrics_summary.csv | $workflow.projectDir/../bin/remove_comma_inside_quotes.sh  > metadata2.csv
 paste -d, metadata1.csv metadata2.csv | tr ',' '\t' > ${sample}.metadata.tsv
 rm metadata1.csv 
