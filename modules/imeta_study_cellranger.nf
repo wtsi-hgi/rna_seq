@@ -26,7 +26,7 @@ process imeta_study_cellranger {
           echo \"....     will only download last ONE (sort | tail -n 1) of the multiple cellranger outputs from Irods.\"
           cat cellranger.object.txt | sort | tail -n 1 > ${sample}.mult.cellranger.irods.txt
         else
-          echo \"One and ony one cellranger output found in Irods for sample ${sample}:\"
+          echo \"One and only one cellranger output found in Irods for sample ${sample}:\"
         fi
         CELLRANGER_IRODS_OBJECT=\$(cat cellranger.object.txt | sort | tail -n 1)
         WORK_DIR=dont_remove
