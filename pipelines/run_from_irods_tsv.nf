@@ -75,12 +75,12 @@ workflow run_from_irods_tsv {
 	file_paths_10x_name = "file_paths_10x.tsv"
 	file_metadata_name = "file_metadata.tsv" }
 
-    iget_study_cellranger.out.cellranger_output_dir
-	.map{sample, cellranger_output_dir  ->
-	"${sample}\t${cellranger_output_dir}/filtered_feature_bc_matrix\t${sample}\tNA\tNA"}
+    iget_study_cellranger.out.cellranger_filtered_outputs
+	.map{sample, filt10x_dir, filt_barcodes, filt_h5, bam ->
+	"${sample}\t${filt10x_dir}\t${sample}\tNA\tNA\t${filt_barcodes}\t${filt_h5}\t${bam}"}
 	.collectFile(name: file_paths_10x_name, 
 		     newLine: true, sort: true,
-		     seed: "experiment_id\tdata_path_10x_format\tshort_experiment_id\tncells_expected\tndroplets_include_cellbender",
+		     seed: "experiment_id\tdata_path_10x_format\tshort_experiment_id\tncells_expected\tndroplets_include_cellbender\tdata_path_barcodes\tdata_path_filt_h5\tdata_path_bam_file",
 		     storeDir:params.outdir)
 
     iget_study_cellranger.out.cellranger_metadata_tsv
