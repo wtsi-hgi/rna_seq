@@ -19,11 +19,11 @@ iget -K -r -v ${cellranger_irods_object} cellranger_${sample}
 echo \"${cellranger_irods_object}\" > cellranger_${sample}/irods_cellranger_path.txt
 
 # parse cellranger output file hierarchy (it depends on cellranger version):
-RESULTS_DIR=${params.outdir}/iget_study_cellranger/${study_id}/${sample}/cellranger_${sample}
+RESULTS_DIR=${params.outdir}/iget_study_cellranger/${study_id}/${sample}
 FILT_BARCODES=\$RESULTS_DIR/\$(find -L . | grep 'barcodes.tsv' | grep 'filtered_.*_bc_matr' | cut -c 3-)
 FILT_DIR=\$(dirname \$FILT_BARCODES)
 FILT_H5=\$RESULTS_DIR/\$(find . | grep 'filtered_.*_bc_matr.*.h5\$' | cut -c 3-)
-BAM_FILE=\$RESULTS_DIR/\$(find . | grep '.bam\$'  | cut -c 3-)
+BAM_FILE=\$RESULTS_DIR/\$(find . | grep 'possorted_genome_bam.bam\$'  | cut -c 3-)
 
 echo RESULTS_DIR is \$RESULTS_DIR
 echo FILT_BARCODES is \$FILT_BARCODES
