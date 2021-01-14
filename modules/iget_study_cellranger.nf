@@ -18,11 +18,18 @@ process 'iget_study_cellranger' {
 iget -K -r -v ${cellranger_irods_object} cellranger_${sample}
 echo \"${cellranger_irods_object}\" > cellranger_${sample}/irods_cellranger_path.txt
 
+# parse cellranger output file hierarchy (it depends on cellranger version):
 RESULTS_DIR=${params.outdir}/iget_study_cellranger/${study_id}/${sample}/cellranger_${sample}
 FILT_BARCODES=\$RESULTS_DIR/\$(find -L . | grep 'barcodes.tsv' | grep 'filtered_.*_bc_matr' | cut -c 3-)
 FILT_DIR=$(dirname \$FILT_BARCODES)
 FILT_H5=\$RESULTS_DIR/\$(find . | grep 'filtered_.*_bc_matr.*.h5\$' | cut -c 3-)
 BAM_FILE=\$RESULTS_DIR/\$(find . | grep '.bam\$'  | cut -c 3-)
+
+echo RESULTS_DIR is \$RESULTS_DIR
+echo FILT_BARCODES is \$FILT_BARCODES
+echo FILT_DIR is \$FILT_DIR
+echo FILT_H5 is \$FILT_H5
+echo BAM_FILE is \$BAM_FILE
 
 # prepare metadata tsv row for that sample:
 echo sample_sanger_id,experiment_id,irods_cellranger_path > metadata1.csv 
