@@ -1,6 +1,8 @@
 process imeta_study_cellranger {
     tag "${sample} ${run_id} ${study_id}"
     
+    publishDir "${params.outdir}/multiple_cellranger/${study_id}/", pattern: "${sample}.mult.cellranger.irods.txt", mode: "copy"
+    
     when: 
     params.run_imeta_study_cellranger
 
@@ -10,6 +12,7 @@ process imeta_study_cellranger {
     output: 
     tuple val(study_id), val(sample), val(run_id), env(CELLRANGER_IRODS_OBJECT), env(WORK_DIR), emit: study_id_sample_cellranger_object
     env(WORK_DIR), emit: work_dir_to_remove
+    tuple val(study_id), val(sample), val(run_id), path("${sample}.mult.cellranger.irods.txt"), emit: study_id_sample_mutiple_cellranger optional true
 
     script:
     """
@@ -17,7 +20,13 @@ process imeta_study_cellranger {
     if [ -f cellranger.object.txt ] 
     then 
         echo file cellranger.object.txt found
-        CELLRANGER_IRODS_OBJECT=\$(cat cellranger.object.txt)
+        if [[ \$(wc -l <cellranger.object.txt) -ge 2 ]]
+        then
+          echo \"warning: more than one cellranger output found in Irods for sample ${sample}:\"
+          echo \"....     will only download ONE of the multiple cellranger outputs from Irods.\"
+          cp cellranger.object.txt ${sample}.mult.cellranger.irods.txt
+        fi
+        CELLRANGER_IRODS_OBJECT=\$(cat cellranger.object.txt | awk '{print \$2}' | sort | tail -n 1)
         WORK_DIR=dont_remove
         rm cellranger.object.txt
     else
