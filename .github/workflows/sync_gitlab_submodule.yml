@@ -18,6 +18,7 @@ jobs:
         git clone git@gitlab.internal.sanger.ac.uk:hgi-projects/nextflow_ci.git
         cd nextflow_ci
         git fetch --all
+        git pull
         export BRANCH=$(echo $GITHUB_REF | sed s/^refs\\/heads\\///g)
         echo full ref is $GITHUB_REF and branch is $BRANCH
         git checkout $BRANCH || \
