@@ -23,10 +23,10 @@ process imeta_study_cellranger {
         if [[ \$(wc -l <cellranger.object.txt) -ge 2 ]]
         then
           echo \"warning: more than one cellranger output found in Irods for sample ${sample}:\"
-          echo \"....     will only download ONE of the multiple cellranger outputs from Irods.\"
-          cp cellranger.object.txt ${sample}.mult.cellranger.irods.txt
+          echo \"....     will only download last ONE (sort | tail -n 1) of the multiple cellranger outputs from Irods.\"
+          cat cellranger.object.txt | sort | tail -n 1 > ${sample}.mult.cellranger.irods.txt
         fi
-        CELLRANGER_IRODS_OBJECT=\$(cat cellranger.object.txt | awk '{print \$2}' | sort | tail -n 1)
+        CELLRANGER_IRODS_OBJECT=\$(cat cellranger.object.txt | sort | tail -n 1)
         WORK_DIR=dont_remove
         rm cellranger.object.txt
     else
