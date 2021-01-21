@@ -9,6 +9,7 @@ include { imeta_study_cellranger } from '../modules/imeta_study_cellranger.nf'
 include { iget_study_cram } from '../modules/iget_study_cram.nf'
 include { iget_study_cellranger } from '../modules/iget_study_cellranger.nf'
 include { crams_to_fastq } from '../modules/crams_to_fastq.nf'
+include {visualiseMetadata} from '../modules/visualiseMetadataPDFs.nf'
 
 workflow run_from_irods_tsv {
     take: channel_samples_tsv
@@ -28,17 +29,17 @@ workflow run_from_irods_tsv {
     crams_to_fastq(iget_study_cram.out.study_sample_cram.groupTuple(by: [0,1]))
 
     // store the number of reads in merged cram in output tables
-    // lostcause has samples that did not pass the crams_to_fastq_min_reads input param, which is the minimum number of reads in merged cram file to try and convert to fastq.gz 
+    // lostcause has samples that did not pass the crams_to_fastq_min_reads input param, which is the minimum number of reads in merged cram file to try and convert to fastq.gz
     crams_to_fastq.out.lostcause
-	.collectFile(name: "crams_to_fastq_lowreads.tsv", 
+	.collectFile(name: "crams_to_fastq_lowreads.tsv",
 		     newLine: false, sort: true, keepHeader: true,
 		     storeDir:params.outdir)
     // numreads has all samples that pass min number of reads number of reads in merged cram file
     crams_to_fastq.out.numreads
-	.collectFile(name: "crams_to_fastq_numreads.tsv", 
+	.collectFile(name: "crams_to_fastq_numreads.tsv",
 		     newLine: false, sort: true, keepHeader: true,
 		     storeDir:params.outdir)
-    
+
     // task to search Irods cellranger location for each sample:
     imeta_study_cellranger(
 	channel_samples_tsv
@@ -67,30 +68,36 @@ workflow run_from_irods_tsv {
     // prepare Lelands' pipeline input
     // --file_metadata     Tab-delimited file containing sample metadata.
     if (params.run_mode == "google_spreadsheet") {
-	file_paths_10x_name = params.google_spreadsheet_mode.
-	input_gsheet_name.replaceAll(/ /, "_") + ".file_paths_10x.tsv"
-	file_metadata_name = params.google_spreadsheet_mode.
-	input_gsheet_name.replaceAll(/ /, "_") + ".file_metadata.tsv" }
-    else {
-	file_paths_10x_name = "file_paths_10x.tsv"
-	file_metadata_name = "file_metadata.tsv" }
+      	file_paths_10x_name = params.google_spreadsheet_mode.
+      	     input_gsheet_name.replaceAll(/ /, "_") + ".file_paths_10x.tsv"
+      	file_metadata_name = params.google_spreadsheet_mode.
+      	     input_gsheet_name.replaceAll(/ /, "_") + ".file_metadata.tsv"
+        println("hello matiss")
+        println(file_metadata_name)
+     }else {
+    	   file_paths_10x_name = "file_paths_10x.tsv"
+      	file_metadata_name = "file_metadata.tsv" }
 
-    iget_study_cellranger.out.cellranger_filtered_outputs
-	.map{sample, filt10x_dir, filt_barcodes, filt_h5, bam ->
-	"${sample}\t${filt10x_dir}\t${sample}\tNA\tNA\t${filt_barcodes}\t${filt_h5}\t${bam}"}
-	.collectFile(name: file_paths_10x_name, 
-		     newLine: true, sort: true,
-		     seed: "experiment_id\tdata_path_10x_format\tshort_experiment_id\tncells_expected\tndroplets_include_cellbender\tdata_path_barcodes\tdata_path_filt_h5\tdata_path_bam_file",
-		     storeDir:params.outdir)
+      iget_study_cellranger.out.cellranger_filtered_outputs
+  	.map{sample, filt10x_dir, filt_barcodes, filt_h5, bam ->
+  	"${sample}\t${filt10x_dir}\t${sample}\tNA\tNA\t${filt_barcodes}\t${filt_h5}\t${bam}"}
+  	.collectFile(name: file_paths_10x_name,
+  		     newLine: true, sort: true,
+  		     seed: "experiment_id\tdata_path_10x_format\tshort_experiment_id\tncells_expected\tndroplets_include_cellbender\tdata_path_barcodes\tdata_path_filt_h5\tdata_path_bam_file",
+  		     storeDir:params.outdir)
+
 
     iget_study_cellranger.out.cellranger_metadata_tsv
-	.collectFile(name: file_metadata_name, 
-		     newLine: false, sort: true, keepHeader: true,
-		     storeDir:params.outdir)
+  	.collectFile(name: file_metadata_name,
+  		     newLine: false, sort: true, keepHeader: true,
+  		     storeDir:params.outdir).set { my_channel }
 
-    emit:
-    imeta_study_cellranger.out.work_dir_to_remove
-}
+    visualiseMetadata(my_channel)
+
+      emit:
+      imeta_study_cellranger.out.work_dir_to_remove
+      }
+
 
 // TODO:  here or main.nf:   // store work dirs to remove into tsv file for onComplete removal.
     //imeta_study.out.work_dir_to_remove.mix(
@@ -98,7 +105,7 @@ workflow run_from_irods_tsv {
 //	    .filter { it != "dont_remove" })
 //	.collectFile(name: 'irods_work_dirs_to_remove.csv', newLine: true, sort: true,
 //		     storeDir:params.outdir)
-    
+
 
   	//run_from_sanger_sample_id(Channel.fromPath(params.input_samples_csv)
 	//			  .splitCsv(header: true, sep: '\t')
