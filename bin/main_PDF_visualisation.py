@@ -5,7 +5,7 @@ import math
 from matplotlib import rcParams
 rcParams.update({'figure.autolayout': True})
 
-def visualise_dataset(Data,plot_value):
+def visualise_dataset(Data,plot_value,min_limit,max_limit):
     plt.style.use('ggplot')
     plt.rcParams['axes.edgecolor'] = '#333F4B'
     plt.rcParams['axes.linewidth'] = 0.8
@@ -14,15 +14,19 @@ def visualise_dataset(Data,plot_value):
     fig, (ax) = plt.subplots(1,1)
     fig.set_size_inches(8.5, 11)
     N = Data.__len__()
-    ind = np.arange(N)  # the x locations for the groups
+    for i in range(0,(max_number_of_entries-N)):
+        Data=Data.append(pd.Series(), ignore_index=True)
+        Data.loc[Data.sample_sanger_id.isna(), 'sample_sanger_id'] = i*" "
+    ind = np.arange(Data.__len__())  # the x locations for the groups
     plt.barh(ind, Data[plot_value],align='center', height=0.9)
     ax.set_yticks(ind)
+    ax.set_xlim(min_limit, max_limit)
     ax.set_yticklabels(Data["sample_sanger_id"])
     ax.invert_yaxis()  # labels read top-to-bottom
-    ax.set_xlabel('Score')
-    ax.set_title(plot_value)
+    ax.set_xlabel(plot_value)
+    # ax.set_title(plot_value)
     fig.autofmt_xdate()
-    #plt.show()
+    plt.show()
     return fig
 
 def visualise_file(name,plot_value,max_number_of_entries,output_folder):
@@ -30,6 +34,8 @@ def visualise_file(name,plot_value,max_number_of_entries,output_folder):
     Data = pd.read_csv(name,sep="\t")  # Press ⌘F8 to toggle the breakpoint.
     for value in plot_value.split(","):
         Reads = Data[value]
+        max_limit=Data[value].max()
+        min_limit = Data[value].min()-0.1*Data[value].min()
         try:
             Reads = Reads.str.replace("%", "").astype(float)
         except:
@@ -42,7 +48,7 @@ def visualise_file(name,plot_value,max_number_of_entries,output_folder):
             d2 = (i+2)*max_number_of_entries
             Data[value] = Reads
             Data_trunctioned=Data.iloc[d1:d2]
-            fig = visualise_dataset(Data_trunctioned,value)
+            fig = visualise_dataset(Data_trunctioned,value,min_limit,max_limit)
             pdf.savefig(fig) #
         pdf.close()
 
