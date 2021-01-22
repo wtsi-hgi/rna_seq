@@ -26,7 +26,7 @@ def visualise_dataset(Data,plot_value,min_limit,max_limit):
     ax.set_xlabel(plot_value)
     # ax.set_title(plot_value)
     fig.autofmt_xdate()
-    plt.show()
+    # plt.show()
     return fig
 
 def visualise_file(name,plot_value,max_number_of_entries,output_folder):
