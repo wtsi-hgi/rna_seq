@@ -26,7 +26,7 @@ def visualise_dataset(Data,plot_value,min_limit,max_limit):
     ax.set_xlabel(plot_value)
     # ax.set_title(plot_value)
     fig.autofmt_xdate()
-    # plt.show()
+    plt.show()
     return fig
 
 def visualise_file(name,plot_value,max_number_of_entries,output_folder):
@@ -34,12 +34,13 @@ def visualise_file(name,plot_value,max_number_of_entries,output_folder):
     Data = pd.read_csv(name,sep="\t")  # Press ⌘F8 to toggle the breakpoint.
     for value in plot_value.split(","):
         Reads = Data[value]
-        max_limit=Data[value].max()
-        min_limit = Data[value].min()-0.1*Data[value].min()
+
         try:
             Reads = Reads.str.replace("%", "").astype(float)
         except:
             next
+        max_limit=Reads.max()
+        min_limit = Reads.min()-0.1*Reads.min()
         import matplotlib.backends.backend_pdf
         filename = value.replace(" ", "_")
         pdf = matplotlib.backends.backend_pdf.PdfPages(f"{output_folder}/{filename}.pdf")
