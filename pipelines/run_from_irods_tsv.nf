@@ -72,8 +72,6 @@ workflow run_from_irods_tsv {
       	     input_gsheet_name.replaceAll(/ /, "_") + ".file_paths_10x.tsv"
       	file_metadata_name = params.google_spreadsheet_mode.
       	     input_gsheet_name.replaceAll(/ /, "_") + ".file_metadata.tsv"
-        println("hello matiss")
-        println(file_metadata_name)
      }else {
     	   file_paths_10x_name = "file_paths_10x.tsv"
       	file_metadata_name = "file_metadata.tsv" }
