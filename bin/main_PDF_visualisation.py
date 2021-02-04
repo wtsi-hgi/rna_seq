@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import sys
+import os
 from matplotlib import rcParams
 rcParams.update({'figure.autolayout': True})
 
@@ -54,11 +56,11 @@ def visualise_file(name,plot_value,max_number_of_entries,output_folder):
         pdf.close()
 
 if __name__ == '__main__':
-    import sys
+    
     file = sys.argv[1] #"Submission_Data_Pilot_UKB.file_metadata.tsv"
     print(f"File loaded is: {file}")
     plot_value = "Number of Reads,Valid Barcodes,Sequencing Saturation"
     max_number_of_entries=10 #here you specify how many samples to use per pdf page.
-    output_folder = sys.argv[2]#"output_files"
+    output_folder = os.getcwd() #sys.argv[2]#"output_files"
     visualise_file(file,plot_value,max_number_of_entries,output_folder)
     print(f"Output has been saved in output_folder: {file}")
