@@ -1,5 +1,3 @@
-params.path="Submission_Data_Pilot_UKB.file_metadata.tsv"
-
 process visualiseMetadata{
 
 
