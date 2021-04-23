@@ -1,51 +1,40 @@
-nextflow.enable.dsl=2
+nextflow.preview.dsl=2
 
-// All inputs are read from Nextflow config file "inputs.nf",
-//  which is located in upstream Gitlab "nextflow_ci" repo (at same branch name).
-// Meaning that if you wish to run pipeline with different parameters,
-// you have to edit+commit+push that "inputs.nf" file, then rerun the pipeline.
+// include sub-workflow that will
+//   1) check that required input files point to existing files (or directories),
+//   2) load these input files into Nextflow channels:
+include { check_and_load_input_files } from './check_and_load_input_files.nf'
 
-// import modules that depend on input mode:
-include { imeta_study } from '../modules/imeta_study.nf'
-include { imeta_samples_csv} from '../modules/imeta_samples_csv.nf'
-include { gsheet_to_csv} from '../modules/gsheet_to_csv.nf'
+// include sub-workflow to get fastq into channel
+//    (from Irods or local files, depending on input mode):
+include { get_fastq } from './get_fastq.nf'
 
-// include workflow common to all input modes:
-include { run_from_irods_tsv } from './run_from_irods_tsv.nf'
+// include sub-workflow to run main rna-seq code on samples/fastq inputs:
+include { main_rnaseq } from './main_rnaseq.nf'
 
 workflow {
 
-    if (params.run_mode == "study_id") {
-	imeta_study(Channel.from(params.study_id_mode.input_studies))
-	samples_irods_tsv = imeta_study.out.irods_samples_tsv
-	work_dir_to_remove = imeta_study.out.work_dir_to_remove }
-    
-    else if (params.run_mode == "csv_samples_id") {
-	i1 = Channel.fromPath(params.csv_samples_id_mode.input_samples_csv)
-	i2 = Channel.from(params.csv_samples_id_mode.input_samples_csv_column)
-	imeta_samples_csv(i1,i2)
-	samples_irods_tsv = imeta_samples_csv.out.irods_samples_tsv
-	work_dir_to_remove = imeta_samples_csv.out.work_dir_to_remove }
-    
-    else if (params.run_mode == "google_spreadsheet") {
-	i1 = Channel.from(params.google_spreadsheet_mode.input_gsheet_name)
-	i2 = Channel.fromPath(params.google_spreadsheet_mode.input_google_creds)
-	i3 = Channel.from(params.google_spreadsheet_mode.output_csv_name)
-	gsheet_to_csv(i1,i2,i3)
-	i4 = Channel.from(params.google_spreadsheet_mode.input_gsheet_column)
-	imeta_samples_csv(gsheet_to_csv.out.samples_csv, i4)
-	samples_irods_tsv = imeta_samples_csv.out.irods_samples_tsv
-	work_dir_to_remove = imeta_samples_csv.out.work_dir_to_remove.mix(gsheet_to_csv.out.work_dir_to_remove) }
+    // show input parameters into main nextflow log file:
+    log.info "\ninput params are:"
+    log.info "$params"
 
-    // common to all input modes:
-    run_from_irods_tsv(samples_irods_tsv)
+    // check inputs files exist on disk, and load them into Nextlfow channels:
+    check_and_load_input_files()
 
-    // list work dirs to remove (because they are Irods searches, so need to always rerun on each NF run):
-    // these are removed on workflow.onComplete if (params.on_complete_uncache_irods_search), see below.
-    run_from_irods_tsv.out.mix(work_dir_to_remove)
-	.filter { it != "dont_remove" }
-	.collectFile(name: 'irods_work_dirs_to_remove.csv', newLine: true, sort: true,
-		     storeDir:params.outdir)
+    // get fastq files, depending on input mode (from Irods CRAM files or from list of fastq files):
+    get_fastq(check_and_load_input_files.out.ch_input_study_ids, // input Irods study IDs to get CRAM files from
+	      check_and_load_input_files.out.ch_input_fastq_csv) // input fastq csv file
+
+    // run main rna-seq workflow on those samples/fastq:
+    main_rnaseq(check_and_load_input_files.out.ch_salmon_index, // input salmon index directory
+		check_and_load_input_files.out.ch_deseq2_tsv, // input deseq 2 tsv file
+		check_and_load_input_files.out.ch_star_index, // input STAR index directory
+		check_and_load_input_files.out.ch_gtf_star, // input STAR GTF file
+		check_and_load_input_files.out.ch_mbv_vcf_gz, // input multi-sample vcf for MBV QTLtools
+		check_and_load_input_files.out.ch_mbv_vcf_gz_csi, // .csi index for input multi-sample vcf for MBV QTLtools
+		check_and_load_input_files.out.ch_biotypes_header, // biotypes header file for featurecounts
+		get_fastq.out.ch_samplename_crams) // channel of tuple(samplename, tuple(fastq1/fastq2)) for paired end reads of each sample to process.
+    
 }
 
 workflow.onError {
@@ -56,16 +45,16 @@ workflow.onComplete {
     log.info "Command line: $workflow.commandLine"
     log.info "Execution status: ${ workflow.success ? 'OK' : 'failed' }"
     
-    if (params.on_complete_uncache_irods_search) {
-	log.info "You have selected \"on_complete_uncache_irods_search = true\"; will therefore attempt to remove Irods work dirs to forcefully uncache them even if successful."
-	if (! file("${params.outdir}/irods_work_dirs_to_remove.csv").isEmpty()) {
-	    log.info "file ${params.outdir}/irods_work_dirs_to_remove.csv exists and not empty ..."
-	    file("${params.outdir}/irods_work_dirs_to_remove.csv")
-		.eachLine {  work_dir ->
-		if (file(work_dir).isDirectory()) {
-		    log.info "removing work dir $work_dir ..."
-		    file(work_dir).deleteDir()   
-		} } } }
+//    if (params.on_complete_uncache_irods_search) {
+//	log.info "You have selected \"on_complete_uncache_irods_search = true\"; will therefore attempt to remove Irods work dirs to forcefully uncache them even if successful."
+//	if (! file("${params.outdir}/irods_work_dirs_to_remove.csv").isEmpty()) {
+//	    log.info "file ${params.outdir}/irods_work_dirs_to_remove.csv exists and not empty ..."
+//	    file("${params.outdir}/irods_work_dirs_to_remove.csv")
+//		.eachLine {  work_dir ->
+//		if (file(work_dir).isDirectory()) {
+//		    log.info "removing work dir $work_dir ..."
+//		    file(work_dir).deleteDir()   
+//		} } } }
     
     if (params.on_complete_remove_workdir_failed_tasks) {
 	log.info "You have selected \"on_complete_remove_workdir_failed_tasks = true\"; will therefore remove work dirs of all tasks that failed (.exitcode file not 0)."
@@ -76,4 +65,3 @@ workflow.onComplete {
 	log.info proc.text
 	log.info b.toString() }
 }
-
