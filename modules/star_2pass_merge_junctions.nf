@@ -15,6 +15,7 @@ process 'star_2pass_merge_junctions' {
   script:
 
   """
+  export TMPDIR=/tmp/  
   cat *.tab | awk '(\$5 > 0 && \$7 > 2 && \$6==0)' | cut -f1-6 | sort | uniq > SJ.filtered.tab
   """
 }

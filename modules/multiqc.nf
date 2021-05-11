@@ -8,7 +8,7 @@ process multiqc {
       }
 
     when:
-    params.star_aligner.star_downstream_tasks.multiqc_task.run
+    params.multiqc_task.run
 
     input:
     file ('lostcause/*') //from ch_multiqc_lostcause.collect().ifEmpty([])
