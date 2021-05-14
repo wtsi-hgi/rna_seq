@@ -28,7 +28,7 @@ workflow {
 		process_fastq(params.input_from_fastq_csv.fastq_path)	
 		Channel.fromPath("${params.outdir}/fastq_gz_csv/FastQ_files.csv").splitCsv(header:false)
 			.map{ row-> tuple(row[0], tuple(file(row[1]), file(row[2]))) }
-			.take(5) // set to -1 for all
+			.take(-1) // set to -1 for all
 				.set { ch_samplename_crams }
     }else{
 		// Here we are retrieving cram files and converting them to the fastq files

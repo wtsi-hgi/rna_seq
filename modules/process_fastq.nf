@@ -21,7 +21,7 @@ workflow process_fastq {
     if (params.input_mode == "from_fastq") {
 		log.info "We are analysing data from from_fastq files"
 		// Get list of study cram files from Irods:
-		Channel.fromPath( "${fastq_path}/*{.fastq,.fastq.gz}" ).take(100) // set to -1 for all                                                                                      
+		Channel.fromPath( "${fastq_path}/*{.fastq,.fastq.gz}" ).take(-1) // set to -1 for all                                                                                      
             .set { fileChannel }
 		gz_fastq(fileChannel)
                 
