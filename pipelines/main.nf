@@ -5,10 +5,10 @@ nextflow.preview.dsl=2
 //   2) load these input files into Nextflow channels:
 include { check_and_load_input_files } from './check_and_load_input_files.nf'
 
-// include sub-workflow to get fastq into channel
+// include sub-workflow to get f`astq into channel
 //    (from Irods or local files, depending on input mode):
 include { get_fastq } from './get_fastq.nf'
-
+include { process_fastq } from '../modules/process_fastq.nf'
 // include sub-workflow to run main rna-seq code on samples/fastq inputs:
 include { main_rnaseq } from './main_rnaseq.nf'
 
@@ -22,9 +22,23 @@ workflow {
     check_and_load_input_files()
 
     // get fastq files, depending on input mode (from Irods CRAM files or from list of fastq files):
-    get_fastq(check_and_load_input_files.out.ch_input_study_ids, // input Irods study IDs to get CRAM files from
-	      check_and_load_input_files.out.ch_input_fastq_csv) // input fastq csv file
+    if (params.input_mode == "from_fastq") {
 
+		process_fastq(params.input_from_fastq_csv.fastq_path)
+		
+		Channel.fromPath("${params.outdir}/fastq_gz_csv/FastQ_files.csv").splitCsv(header:false)
+			.map{ row-> tuple(row[0], tuple(file(row[1]), file(row[2]))) }
+			.take(5) // set to -1 for all
+				.set { ch_samplename_crams }
+
+    }
+    else{
+		get_fastq(check_and_load_input_files.out.ch_input_study_ids, // input Irods study IDs to get CRAM files from
+			check_and_load_input_files.out.ch_input_fastq_csv) // input fastq csv file
+		ch_samplename_crams = get_fastq.out.ch_samplename_crams
+    }
+    
+    
     // run main rna-seq workflow on those samples/fastq:
     main_rnaseq(check_and_load_input_files.out.ch_salmon_index, // input salmon index directory
 		check_and_load_input_files.out.ch_deseq2_tsv, // input deseq 2 tsv file
@@ -33,7 +47,7 @@ workflow {
 		check_and_load_input_files.out.ch_mbv_vcf_gz, // input multi-sample vcf for MBV QTLtools
 		check_and_load_input_files.out.ch_mbv_vcf_gz_csi, // .csi index for input multi-sample vcf for MBV QTLtools
 		check_and_load_input_files.out.ch_biotypes_header, // biotypes header file for featurecounts
-		get_fastq.out.ch_samplename_crams) // channel of tuple(samplename, tuple(fastq1/fastq2)) for paired end reads of each sample to process.
+		ch_samplename_crams) // channel of tuple(samplename, tuple(fastq1/fastq2)) for paired end reads of each sample to process.
     
 }
 
