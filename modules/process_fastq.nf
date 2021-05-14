@@ -26,12 +26,17 @@ workflow process_fastq {
 		gz_fastq(fileChannel)
                 
         println("lets pass the list in now to generate csv file that can be used for the channels")
-        fastq_to_csv(gz_fastq.out.collect())
+        fastq_to_csv(gz_fastq.out.collect()) 
+        fastq_to_csv.out.view()
+        fastq_to_csv.out.splitCsv(header:false)
+            .map{ row-> tuple(row[0], tuple(file(row[1]), file(row[2]))) }
+            .take(-1) // set to -1 for all
+                .set { ch_samplename_crams }
 
 	}
     
     emit:
-    output_path = fastq_to_csv.out.all_samples_gz // channel of tuple(samplename,tuple(fastq1/fastq2)) for paired end reads.
+        ch_samplename_crams // channel of tuple(samplename,tuple(fastq1/fastq2)) for paired end reads.
     
 }
 
