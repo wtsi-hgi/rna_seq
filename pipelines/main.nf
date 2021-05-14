@@ -23,16 +23,15 @@ workflow {
 
     // get fastq files, depending on input mode (from Irods CRAM files or from list of fastq files):
     if (params.input_mode == "from_fastq") {
-
-		process_fastq(params.input_from_fastq_csv.fastq_path)
-		
+		// In this part we are loading fastq files already prepeared from a directory. We assess whether the fatq files are gzipped as .gz format is needed.
+		//  FastqCSV file is prepeared and eventually a channel created accordingly
+		process_fastq(params.input_from_fastq_csv.fastq_path)	
 		Channel.fromPath("${params.outdir}/fastq_gz_csv/FastQ_files.csv").splitCsv(header:false)
 			.map{ row-> tuple(row[0], tuple(file(row[1]), file(row[2]))) }
 			.take(5) // set to -1 for all
 				.set { ch_samplename_crams }
-
-    }
-    else{
+    }else{
+		// Here we are retrieving cram files and converting them to the fastq files
 		get_fastq(check_and_load_input_files.out.ch_input_study_ids, // input Irods study IDs to get CRAM files from
 			check_and_load_input_files.out.ch_input_fastq_csv) // input fastq csv file
 		ch_samplename_crams = get_fastq.out.ch_samplename_crams

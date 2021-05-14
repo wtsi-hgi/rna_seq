@@ -61,64 +61,67 @@ workflow main_rnaseq {
 
     // choose STAR output between the 2 STAR modes: star_2pass_basic.out or star_2pass_2ndpass.out 
     if (params.star_aligner.star_downstream_tasks.downstream_outputs == 'star_custom_2pass') {
-	star_out = star_2pass_2nd_pass.out
+	    star_out = star_2pass_2nd_pass.out
     } else if (params.star_aligner.star_downstream_tasks.downstream_outputs == 'star_2pass_basic') {
-	star_out = star_2pass_basic.out }
-    
+	    star_out = star_2pass_basic.out 
+    }
+    // https://qtltools.github.io/qtltools/ :MBV is used to ensure good match between the sequence and genotype data. This is useful to detect sample mislabeling, contamination or PCR amplification biases.
     mbv(star_out[0], ch_mbv_vcf_gz.collect(), ch_mbv_vcf_gz_csi.collect())
     
+    // this step runs regtools jusnctions function: The junctions extract command can be used to extract exon-exon junctions from an RNAseq BAM file.
     leafcutter_bam2junc_regtools(star_out[0])
+    // this part uses python script put in a container - TODO check
     leafcutter_clustering_regtools(leafcutter_bam2junc_regtools.out.collect())
-    
+    // python script to perform filtering.
     filter_star_aln_rate(star_out[1].map{samplename,logfile,bamfile -> [samplename,logfile]}) // discard bam file, only STAR log required to filter
-    
     filter_star_aln_rate.out.branch {
         filtered: it[1] == 'above_threshold'
         discarded: it[1] == 'below_threshold'}.set { star_filter }
-    
     star_filter.filtered.combine(star_out[1], by:0) //reattach bam file
 	.map{samplename,filter,logfile,bamfile -> ["star", samplename, bamfile]} // discard log file and attach aligner name
 	.set{star_filtered} 
     
+    // this indexes the bam file with  samtools index – indexes
     samtools_index_idxstats(star_filtered)
-    
+    // python code to generate a summary file
     mapsummary(samtools_index_idxstats.out)
-    
+    // uses the featureCounts software which is designed to be an an efficient general purpose program for assigning sequence reads to genomic features.
     featureCounts(star_filtered, ch_gtf_star.collect(), ch_biotypes_header.collect())
-
+    // python script performing merging.
     merge_featureCounts(featureCounts.out[0].map{samplename, gene_fc_txt -> gene_fc_txt}.collect())
-    
     //    crams_to_fastq_gz.out[1]
     //.mix(
     star_filter.discarded.map{samplename, filter -> [text: "${samplename}\tSTAR\tlowmapping\n"]}//)
 	.set{ch_lostcause }
+
+    // Assesses the lost samples and reports in the combined folder: lostcause_mqc.txt
     lostcause(ch_lostcause.collectFile({ ['lostcause.txt', it.text]},sort:true))
     
     featureCounts.out[1]
-	.filter{ pick_aligner(it[0]) }
 	.map { it[1] }
 	.set{ ch_multiqc_fc_aligner }
     
     featureCounts.out[2]
-	.filter{ pick_aligner(it[0]) }
 	.map{ it[1] }
 	.set{ ch_multiqc_fcbiotype_aligner }
     
+    // the folowing part Aggregates results from bioinformatics analyses across many samples into a single report
     if (params.salmon_aligner.salmon_task.run) {
-	multiqc(lostcause.out.collect().ifEmpty([]),
-		fastqc.out.collect().ifEmpty([]),
-		mapsummary.out.collect().ifEmpty([]),
-		ch_multiqc_fc_aligner.collect().ifEmpty([]),
-		ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
-		star_out[2].collect().ifEmpty([]),
-		salmon.out[0].collect().ifEmpty([]))}
-    else {
-	multiqc(lostcause.out.collect().ifEmpty([]),
-		fastqc.out.collect().ifEmpty([]),
-		mapsummary.out.collect().ifEmpty([]),
-		ch_multiqc_fc_aligner.collect().ifEmpty([]),
-		ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
-		star_out[2].collect().ifEmpty([]),
-		[])}
+        multiqc(lostcause.out.collect().ifEmpty([]),
+            fastqc.out.collect().ifEmpty([]),
+            mapsummary.out.collect().ifEmpty([]),
+            ch_multiqc_fc_aligner.collect().ifEmpty([]),
+            ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
+            star_out[2].collect().ifEmpty([]),
+            salmon.out[0].collect().ifEmpty([]))
+    } else {
+        multiqc(lostcause.out.collect().ifEmpty([]),
+            fastqc.out.collect().ifEmpty([]),
+            mapsummary.out.collect().ifEmpty([]),
+            ch_multiqc_fc_aligner.collect().ifEmpty([]),
+            ch_multiqc_fcbiotype_aligner.collect().ifEmpty([]),
+            star_out[2].collect().ifEmpty([]),
+            [])
+    }
     
 }
