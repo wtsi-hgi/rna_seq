@@ -4,7 +4,7 @@ process tximport {
     publishDir "${params.outdir}/tximport", mode: "${params.copy_mode}", overwrite: true
 
     when:
-    params.salmon_aligner.salmon_dowstream_tasks.tximport_task.run
+    params.salmon_aligner.salmon_downstream_tasks.tximport_task.run
 
     input:
     file (quant_sf_files)  // from collect()

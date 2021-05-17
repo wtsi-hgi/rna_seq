@@ -6,7 +6,7 @@ if (length(args)==0) {
 
 # local_libs = "/lustre/scratch118/humgen/resources/conda/star/lib/R/library"
 # .libPaths(local_libs)
-.libPaths()
+#.libPaths()
 
 library(AnnotationHub)
 library(tximport)

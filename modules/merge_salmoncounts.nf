@@ -8,7 +8,7 @@ process merge_salmoncounts {
     file (all_quant_genes_sf)
 
     when:
-    params.salmon_aligner.salmon_dowstream_tasks.merge_salmoncounts_task.run
+    params.salmon_aligner.salmon_downstream_tasks.merge_salmoncounts_task.run
 
     output:
     tuple file('*transcounts.txt'), file('*transtpm.txt'), file('*genecounts.txt'), file('*genetpm.txt')

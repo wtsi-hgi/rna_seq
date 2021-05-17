@@ -1,13 +1,8 @@
 nextflow.enable.dsl=2
 
 // include RNAseq Nextflow modules/tasks:
-include { iget_cram } from '../modules/irods.nf'
 include { gz_fastq } from '../modules/gz_fastq.nf'
 include { fastq_to_csv } from '../modules/fastq_to_csv.nf'
-include { crams_to_fastq_gz } from '../modules/crams_to_fastq.nf'
-include { baton_study_id } from '../modules/baton.nf'
-include { mbv } from '../modules/mbv.nf'
-include { get_egan_id } from '../modules/get_egan_id.nf'
 
 workflow process_fastq {
     
@@ -27,7 +22,7 @@ workflow process_fastq {
                 
         println("lets pass the list in now to generate csv file that can be used for the channels")
         fastq_to_csv(gz_fastq.out.collect()) 
-        fastq_to_csv.out.view()
+        
         fastq_to_csv.out.splitCsv(header:false)
             .map{ row-> tuple(row[0], tuple(file(row[1]), file(row[2]))) }
             .take(-1) // set to -1 for all
