@@ -47,7 +47,7 @@ workflow {
 		check_and_load_input_files.out.ch_mbv_vcf_gz, // input multi-sample vcf for MBV QTLtools
 		check_and_load_input_files.out.ch_mbv_vcf_gz_csi, // .csi index for input multi-sample vcf for MBV QTLtools
 		check_and_load_input_files.out.ch_biotypes_header, // biotypes header file for featurecounts
-		ch_samplename_crams.take(8)) // channel of tuple(samplename, tuple(fastq1/fastq2)) for paired end reads of each sample to process.
+		ch_samplename_crams.take(-1)) // channel of tuple(samplename, tuple(fastq1/fastq2)) for paired end reads of each sample to process.
     
 }
 
