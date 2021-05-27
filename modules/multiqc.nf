@@ -2,7 +2,7 @@ process multiqc {
 
     publishDir "${params.outdir}", mode: 'copy',
       saveAs: {filename ->
-          if (filename.indexOf("multiqc.html") > 0) "combined/$filename"
+          if (filename.indexOf(".html") > 0) "combined/$filename"
           else if (filename.indexOf("_data") > 0) "$filename"
           else null
       }
@@ -20,8 +20,8 @@ process multiqc {
     file ('salmon/*') //from ch_alignment_logs_salmon.collect().ifEmpty([])
 
     output:
-    file "*_multiqc.html"
-    file "*_data"
+    file "*multiqc.html"
+    file "*data"
 
     script:
     def filename = "multiqc.html"

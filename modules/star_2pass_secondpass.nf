@@ -54,7 +54,8 @@ STAR --genomeDir ${genomeDir} \\
 --alignIntronMin 20 \\
 --alignIntronMax 1000000 \\
 --alignMatesGapMax 1000000 \\
---outReadsUnmapped Fastx
+--outReadsUnmapped Fastx \\
+--limitBAMsortRAM 31511664535
 
   # Index the BAM file
   samtools index ${samplename}.Aligned.sortedByCoord.out.bam

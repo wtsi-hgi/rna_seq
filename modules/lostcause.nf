@@ -5,7 +5,7 @@ process lostcause {
     file (inputs) //from ch_lostcause.collectFile{ ['lostcause.txt', it.text] }
 
     output:
-    file('*.lostcause_mqc.txt') //into ch_multiqc_lostcause
+    file('*lostcause_mqc.txt') //into ch_multiqc_lostcause
 
     script:
     def outputname = "lostcause_mqc.txt"
