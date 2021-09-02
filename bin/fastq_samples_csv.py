@@ -21,7 +21,14 @@ for file in files_in:
 
     file_name = (file.split('/')[-1])
     Sample_ID = file_name.split(".")[0]
-    fataq_id= file_name.split(".")[1]
+    if (Sample_ID[-2:]=='_2' or Sample_ID[-2:]=='_1'):
+        # this may cause issues if users define the files in this particular way, but hopefully not
+        fataq_id= Sample_ID.split("_")[-1]
+        Sample_ID=Sample_ID[:-2]
+        
+    else:
+        fataq_id= file_name.split(".")[1]
+
     try:
         all_data[Sample_ID].append(file)
     except:

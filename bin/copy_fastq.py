@@ -6,6 +6,7 @@ import argparse
 def fastq_copy_or_compress(file_in,file_out):
     print('Assessing file extension and performing either copy or gz compression')
     if file_in.split('.')[-1]=='gz':
+        file_out=file_out.replace('.gz.gz','.gz')
         os.system(f"cp {file_in} {file_out}")
     else:
         os.system(f"gzip -k --force {file_in} {file_out}")
