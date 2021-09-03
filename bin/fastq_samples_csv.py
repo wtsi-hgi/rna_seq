@@ -30,10 +30,10 @@ for file in files_in:
         fataq_id= file_name.split(".")[1]
 
     try:
-        all_data[Sample_ID].append(file)
+        all_data[Sample_ID][fataq_id]=file
     except:
-        all_data[Sample_ID]=[]
-        all_data[Sample_ID].append(file)
+        all_data[Sample_ID]={}
+        all_data[Sample_ID][fataq_id]=file
 
 #in case that there is no paired fastq files we check it by:
 length_dict = {key: len(value) for key, value in all_data.items()}
@@ -41,4 +41,7 @@ listOfKeys = [key  for (key, value) in length_dict.items() if value == 2]
 all_data_matched = dict((k, all_data[k]) for k in listOfKeys if k in all_data)
 
 Dataset= pd.DataFrame(all_data_matched).T
+
+# Need to make sure that the data is in correct order, if not it doesnt allign correctly.
+Dataset = Dataset[['1', '2']]
 Dataset.to_csv('Fastq_files.csv',header=False)
