@@ -7,9 +7,15 @@ import os
 import argparse
 
 parser = argparse.ArgumentParser(description="Convert to CSV file of paired fastq")
-parser.add_argument("-f", dest = 'file_path', required=True, default='FN', help="The path to the file")
+# parser.add_argument("-f", dest = 'file_path', required=False, default='FN', help="The path to the file")
+parser.add_argument("-s", dest = 'singleend', required=True, default='false', help="Is the run singleend")
 args = parser.parse_args()
-file_in  = args.file_path
+# file_in  = args.file_path
+singleend =  args.singleend
+print(singleend)
+
+file_in=pd.read_csv("samplePaths_list.txt",header=None,sep='\t')
+file_in=file_in[0].values[0]
 all_data ={}
 # Convert this now to the list.
 file_in=file_in.replace("[",'')
@@ -17,6 +23,7 @@ file_in=file_in.replace("]",'')
 file_in=file_in.replace("\\",'')
 files_in=file_in.split(", ")
 files_in.sort()
+
 for file in files_in:
 
     file_name = (file.split('/')[-1])
@@ -28,6 +35,7 @@ for file in files_in:
         
     else:
         fataq_id= file_name.split(".")[1]
+        Sample_ID='1'
 
     try:
         all_data[Sample_ID][fataq_id]=file
@@ -37,7 +45,11 @@ for file in files_in:
 
 #in case that there is no paired fastq files we check it by:
 length_dict = {key: len(value) for key, value in all_data.items()}
-listOfKeys = [key  for (key, value) in length_dict.items() if value == 2]
+if singleend =='true':
+    listOfKeys = [key  for (key, value) in length_dict.items() if value == 1]
+else:
+    listOfKeys = [key  for (key, value) in length_dict.items() if value == 2]
+
 all_data_matched = dict((k, all_data[k]) for k in listOfKeys if k in all_data)
 
 Dataset= pd.DataFrame(all_data_matched).T

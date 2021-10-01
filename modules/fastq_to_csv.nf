@@ -16,6 +16,7 @@ process fastq_to_csv{
     d='2' //for debugging changing this value will bypass the catche
     
     """
-      python $workflow.projectDir/../bin/fastq_samples_csv.py -f '${sample_paths}'
+      echo '${sample_paths}' > samplePaths_list.txt
+      python $workflow.projectDir/../bin/fastq_samples_csv.py -s '${params.star_aligner.star_downstream_tasks.featureCounts_task.singleend}'
     """
 }
