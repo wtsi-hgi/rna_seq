@@ -34,8 +34,8 @@ for file in files_in:
         Sample_ID=Sample_ID[:-2]
         
     else:
-        fataq_id= file_name.split(".")[1]
-        Sample_ID='1'
+        fataq_id= '1'
+        
 
     try:
         all_data[Sample_ID][fataq_id]=file
@@ -55,5 +55,7 @@ all_data_matched = dict((k, all_data[k]) for k in listOfKeys if k in all_data)
 Dataset= pd.DataFrame(all_data_matched).T
 
 # Need to make sure that the data is in correct order, if not it doesnt allign correctly.
+if singleend =='true':
+    Dataset['2']=''
 Dataset = Dataset[['1', '2']]
 Dataset.to_csv('Fastq_files.csv',header=False)

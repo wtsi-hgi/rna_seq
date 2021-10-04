@@ -10,9 +10,12 @@ process 'fastqc' {
     input:
     tuple val(samplename), file(reads)
     
+    
     output:
-    tuple file("*1_fastqc.zip"), file("*2_fastqc.zip"), file("*1_fastqc.html"), file("*2_fastqc.html")
+        tuple file("*fastqc.zip"), file("*fastqc.html"), file("*fastqc.html")
 
+        
+    
   script:
   """
   fastqc -t ${task.cpus} -q $reads

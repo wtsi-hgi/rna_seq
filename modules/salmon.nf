@@ -17,6 +17,31 @@ process salmon {
     // file "${samplename}.quant.genes.sf" //into ch_salmon_genes
 
     script:
+    if (params.star_aligner.star_downstream_tasks.featureCounts_task.singleend){
+    log.info 'single end'
+    """
+    salmon quant \\
+        -i ${salmon_index_dir} \\
+        -l ISR \\
+        -p ${task.cpus} \\
+        --seqBias \\
+        --gcBias \\
+        --posBias \\
+        --no-version-check \\
+        -q \\
+        -o . \\
+        -r ${reads[0]} \\
+        --useVBOpt \\
+        --numBootstraps 100
+    
+    mv quant.sf ${samplename}.quant.sf
+    mkdir -p my_outs/${samplename}/libParams
+    mkdir -p my_outs/${samplename}/aux_info
+    ln -f aux_info/meta_info.json my_outs/${samplename}/aux_info/meta_info.json
+    ln -f libParams/flenDist.txt  my_outs/${samplename}/libParams/flenDist.txt
+    """
+    }else{
+
     """
     salmon quant \\
         -i ${salmon_index_dir} \\
@@ -32,12 +57,16 @@ process salmon {
         -2 ${reads[1]} \\
         --useVBOpt \\
         --numBootstraps 100
+    
     mv quant.sf ${samplename}.quant.sf
     mkdir -p my_outs/${samplename}/libParams
     mkdir -p my_outs/${samplename}/aux_info
     ln -f aux_info/meta_info.json my_outs/${samplename}/aux_info/meta_info.json
     ln -f libParams/flenDist.txt  my_outs/${samplename}/libParams/flenDist.txt
     """
+
+
+    }
 
     // TODO: prepare columns for merging; extract correct column and transpose (paste) it.
     // Include the row names so merger can check identity.

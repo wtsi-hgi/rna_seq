@@ -13,7 +13,7 @@ process fastq_to_csv{
     path('Fastq_files.csv'), emit: all_samples_gz
     
     script:
-    d='2' //for debugging changing this value will bypass the catche
+    d='3' //for debugging changing this value will bypass the catche
     
     """
       echo '${sample_paths}' > samplePaths_list.txt

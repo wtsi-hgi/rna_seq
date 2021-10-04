@@ -8,7 +8,13 @@ include { tximport } from '../modules/tximport.nf'
 include { star_2pass_basic } from '../modules/star_2pass_basicmode.nf'
 include { star_2pass_1st_pass } from '../modules/star_2pass_firstpass.nf'
 include { star_2pass_merge_junctions } from '../modules/star_2pass_merge_junctions.nf'
-include { star_2pass_2nd_pass } from '../modules/star_2pass_secondpass.nf'
+
+if (params.star_aligner.star_downstream_tasks.featureCounts_task.singleend){
+    include { star_2pass_2nd_pass } from '../modules/star_2pass_secondpass_singleend.nf'
+}else{
+    include { star_2pass_2nd_pass } from '../modules/star_2pass_secondpass.nf'
+}
+
 include { filter_star_aln_rate } from '../modules/filter_star_aln_rate.nf'
 include { leafcutter_bam2junc_regtools } from '../modules/leafcutter_bam2junc.nf'
 include { leafcutter_clustering_regtools } from '../modules/leafcutter_clustering.nf'
