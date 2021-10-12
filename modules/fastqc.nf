@@ -12,7 +12,7 @@ process 'fastqc' {
     
     
     output:
-        tuple file("*fastqc.zip"), file("*fastqc.html"), file("*fastqc.html")
+        tuple file("*fastqc.zip"), file("*fastqc.html")
 
         
     
