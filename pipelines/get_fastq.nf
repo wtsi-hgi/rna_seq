@@ -48,8 +48,7 @@ workflow get_fastq {
 	
     } else if (params.input_mode == "from_fastq_csv") {
 		log.info "params.input_mode == \"from_fastq_csv\"" 
-		Channel
-			.fromPath(params.from_fastq_mode.fastq_csv)
+		ch_input_fastq_csv
 			.splitCsv(header:false)
 			.map{ row-> tuple(row[0], tuple(file(row[1]), file(row[2]))) }
 			.set { ch_samplename_crams }
