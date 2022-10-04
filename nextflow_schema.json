@@ -1,0 +1,55 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/./master/nextflow_schema.json",
+    "title": ". pipeline parameters",
+    "description": "",
+    "type": "object",
+    "definitions": {
+        "input_output_options": {
+            "title": "Input/output options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find input data and save output data.",
+            "properties": {
+                "input_mode": {
+                    "type": "string",
+                    "fa_icon": "far fa-angle-double-right",
+                    "enum": [
+                        "from_study_id",
+                        "from_fastq_csv"
+                    ]
+                },
+                "input_from_study_id.baton_task.studies_list": {
+                    "type": "array",
+                    "fa_icon": "fas fa-bars",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "description": "List of studies in the form ['5591','5855']"
+                },
+                "input_from_fastq_csv.fastq_csv": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file-csv",
+                    "format": "file-path",
+                    "mimetype": "text/csv"
+                },
+                "outdir": {
+                    "type": "string",
+                    "fa_icon": "fas fa-folder",
+                    "format": "directory-path"
+                }
+            },
+            "required": [
+                "input_mode",
+                "outdir"
+            ]
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "#/definitions/input_output_options"
+        }
+    ]
+}
