@@ -29,11 +29,16 @@
                     "uniqueItems": true,
                     "description": "List of studies in the form ['5591','5855']"
                 },
-                "input_from_fastq_csv.fastq_csv": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file-csv",
-                    "format": "file-path",
-                    "mimetype": "text/csv"
+                "input_from_fastq_csv": {
+                    "type": "object",
+                    "properties": {
+                        "fastq_csv": {
+                            "type": "string",
+                            "fa_icon": "fas fa-file-csv",
+                            "format": "file-path",
+                            "mimetype": "text/csv"
+                        }
+                    }
                 },
                 "outdir": {
                     "type": "string",
