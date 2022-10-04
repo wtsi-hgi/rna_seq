@@ -26,15 +26,10 @@
                     "format": "file-path",
                     "mimetype": "text/csv"
                 },
-                "studies_list": {
-                    "type": "array",
+                "study": {
+                    "type": "string",
                     "fa_icon": "fas fa-bars",
-                    "items": {
-                        "type": "string"
-                    },
-                    "minItems": 1,
-                    "uniqueItems": true,
-                    "description": "List of studies in the form ['5591','5855']"
+                    "description": "Study in the form '5591'"
                 },
                 "outdir": {
                     "type": "string",

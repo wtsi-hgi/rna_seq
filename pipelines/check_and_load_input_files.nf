@@ -56,9 +56,7 @@ workflow check_and_load_input_files {
 		if(params.input_mode == "from_study_id") {
 			println "Getting data from study ID"
 			// if input_mode = "from_study_id", check that study IDs were provided (at least one):
-			Channel.fromList(params.studies_list)
-				.ifEmpty { exit 1, "if input param input_mode == \"from_study_id\": ${params.studies_list}" }
-				.set { ch_input_study_ids }
+			Channel.from(params.study).set { ch_input_study_ids }
 		} else {
 			ch_input_study_ids = Channel.from('not_used')}
 		
