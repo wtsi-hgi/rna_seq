@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/./master/nextflow_schema.json",
-    "title": ". pipeline parameters",
+    "title": "Sanger STAR-based RNASeq pipeline",
     "description": "",
     "type": "object",
     "definitions": {
@@ -14,10 +14,17 @@
                 "input_mode": {
                     "type": "string",
                     "fa_icon": "far fa-angle-double-right",
+                    "description": "you must choose 'from_study_id'; 'from_fastq_csv' or 'from_fastq'",
                     "enum": [
                         "from_study_id",
                         "from_fastq_csv"
                     ]
+                },
+                "fastq_csv": {
+                    "type": "string",
+                    "fa_icon": "fas fa-file-csv",
+                    "format": "file-path",
+                    "mimetype": "text/csv"
                 },
                 "studies_list": {
                     "type": "array",
@@ -28,12 +35,6 @@
                     "minItems": 1,
                     "uniqueItems": true,
                     "description": "List of studies in the form ['5591','5855']"
-                },
-                "fastq_csv": {
-                    "type": "string",
-                    "fa_icon": "fas fa-file-csv",
-                    "format": "file-path",
-                    "mimetype": "text/csv"
                 },
                 "outdir": {
                     "type": "string",
