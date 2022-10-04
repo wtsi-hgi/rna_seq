@@ -3,14 +3,14 @@ nextflow.preview.dsl=2
 // include sub-workflow that will
 //   1) check that required input files point to existing files (or directories),
 //   2) load these input files into Nextflow channels:
-include { check_and_load_input_files } from './check_and_load_input_files.nf'
+include { check_and_load_input_files } from './pipelines/check_and_load_input_files.nf'
 
 // include sub-workflow to get f`astq into channel
 //    (from Irods or local files, depending on input mode):
-include { get_fastq } from './get_fastq.nf'
-include { process_fastq } from '../modules/process_fastq.nf'
+include { get_fastq } from './pipelines/get_fastq.nf'
+include { process_fastq } from './modules/process_fastq.nf'
 // include sub-workflow to run main rna-seq code on samples/fastq inputs:
-include { main_rnaseq } from './main_rnaseq.nf'
+include { main_rnaseq } from './pipelines/main_rnaseq.nf'
 
 workflow {
 
