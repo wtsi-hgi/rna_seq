@@ -1,4 +1,4 @@
-nextflow.preview.dsl=2
+nextflow.enable.dsl=2
 
 // include sub-workflow that will
 //   1) check that required input files point to existing files (or directories),
