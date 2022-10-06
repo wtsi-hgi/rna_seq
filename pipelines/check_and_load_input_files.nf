@@ -9,7 +9,7 @@ workflow check_and_load_input_files {
 		if (params.input_mode == "from_fastq_csv") {
 			// check input fastq csv file:
 			println "Using from_fastq_csv"
-			Channel.fromPath(params.fastq_csv, checkIfExists: true).set { ch_input_fastq_csv }
+			Channel.fromPath(params.input_from_fastq_csv.fastq_csv, checkIfExists: true).set { ch_input_fastq_csv }
 		} 
 		else {
 			ch_input_fastq_csv = Channel.from('not_used')
