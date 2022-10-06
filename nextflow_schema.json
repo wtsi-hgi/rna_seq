@@ -13,8 +13,8 @@
             "properties": {
                 "input_mode": {
                     "type": "string",
-                    "fa_icon": "far fa-angle-double-right",
-                    "description": "you must choose 'from_study_id'; 'from_fastq_csv' or 'from_fastq'",
+                    "fa_icon": "fas fa-angle-double-right",
+                    "description": "Choose between 'from_study_id', 'from_fastq_csv' or 'from_fastq'",
                     "enum": [
                         "from_study_id",
                         "from_fastq_csv"
@@ -27,14 +27,27 @@
                             "type": "string",
                             "fa_icon": "fas fa-file-csv",
                             "format": "file-path",
-                            "mimetype": "text/csv"
+                            "mimetype": "text/csv",
+                            "schema": "assets/fastq_csv_schema.json",
+                            "description": "path to csv-file pointing to fastq-files"
                         }
                     }
                 },
-                "study": {
-                    "type": "string",
-                    "fa_icon": "fas fa-bars",
-                    "description": "Study in the form '5591'"
+                "input_from_study_id": {
+                    "type": "object",
+                    "properties": {
+                        "baton_task": {
+                            "type": "object",
+                            "properties": {
+                                "study": {
+                                    "type": "string",
+                                    "fa_icon": "fas fa-bars",
+                                    "pattern": "^\\d+$",
+                                    "description": "Study in the form '5591'"
+                                }
+                            }
+                        }
+                    }
                 },
                 "outdir": {
                     "type": "string",
