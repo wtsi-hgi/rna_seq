@@ -1,0 +1,4 @@
+reports:
+    "**/combined/multiqc.html":
+        display: "MultiQC HTML Report"
+        mimeType: "text/html"
