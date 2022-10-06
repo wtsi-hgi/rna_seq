@@ -15,6 +15,6 @@ process gz_fastq {
     outputname = "${samplename}.gz"
     outputname=outputname.replaceAll(".gz.gz", ".gz")
     """
-      python $workflow.projectDir/../bin/copy_fastq.py -f ${samplename} -o ${outputname}
+      python $workflow.projectDir/bin/copy_fastq.py -f ${samplename} -o ${outputname}
     """
 }

@@ -16,7 +16,7 @@ process iget_cram {
 
     script:
     """
-    if bash -euo pipefail $workflow.projectDir/../bin/irods.sh -N ${task.cpus} -t ${studyid} -s ${samplename} ${params.input_from_study_id.iget_cram_task.dropqc}; then
+    if bash -euo pipefail $workflow.projectDir/bin/irods.sh -N ${task.cpus} -t ${studyid} -s ${samplename} ${params.input_from_study_id.iget_cram_task.dropqc}; then
       true
     else
       stat=\$?
