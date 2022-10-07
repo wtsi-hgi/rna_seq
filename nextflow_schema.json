@@ -22,6 +22,7 @@
                 },
                 "input_from_fastq_csv": {
                     "type": "object",
+                    "fa_icon": "fas fa-file-csv",
                     "properties": {
                         "fastq_csv": {
                             "type": "string",
@@ -35,6 +36,7 @@
                 },
                 "input_from_study_id": {
                     "type": "object",
+                    "fa_icon": "fas fa-address-card",
                     "properties": {
                         "baton_task": {
                             "type": "object",
@@ -59,11 +61,68 @@
                 "input_mode",
                 "outdir"
             ]
+        },
+        "star_options": {
+            "title": "Tools options",
+            "type": "object",
+            "fa_icon": "fas fa-tools",
+            "description": "Define options of STAR and featureCounts.",
+            "properties": {
+                "star_aligner": {
+                    "type": "object",
+                    "title": "STAR options",
+                    "fa_icon": "fas fa-star",
+                    "properties": {
+                        "star_index": {
+                            "type": "string",
+                            "format": "directory-path",
+                            "description": "Path to STAR index",
+                            "default": "/lustre/scratch118/humgen/resources/rna_seq_genomes/star2.7.8a_index_Homo_sapiens.GRCh38.99_50bp/"
+                        },
+                        "star_downstream_tasks": {
+                            "type": "object",
+                            "fa_icon": "fas fa-calculator",
+                            "properties": {
+                                "featureCounts_task": {
+                                    "type": "object",
+                                    "title": "featureCounts options",
+                                    "description": "Choose type of reads",
+                                    "properties": {
+                                        "singleend": {
+                                            "type": "boolean",
+                                            "default": false,
+                                            "description": "Turn on if reads are single-end"
+                                        },
+                                        "unstranded": {
+                                            "type": "boolean",
+                                            "default": false,
+                                            "description": "Turn on if reads are unstranded"
+                                        },
+                                        "forward_stranded": {
+                                            "type": "boolean",
+                                            "default": false,
+                                            "description": "Turn on if reads are forward stranded"
+                                        },
+                                        "reverse_stranded": {
+                                            "type": "boolean",
+                                            "default": true,
+                                            "description": "Turn on if reads are reverse stranded"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "allOf": [
         {
             "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/star_options"
         }
     ]
 }
