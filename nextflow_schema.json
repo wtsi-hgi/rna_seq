@@ -57,10 +57,7 @@
                     "format": "directory-path"
                 }
             },
-            "required": [
-                "input_mode",
-                "outdir"
-            ]
+            "required": ["input_mode", "outdir"]
         },
         "star_options": {
             "title": "Tools options",
@@ -112,7 +109,8 @@
                                 }
                             }
                         }
-                    }
+                    },
+                    "required": ["star_index", "star_downstream_tasks"]
                 }
             }
         }
