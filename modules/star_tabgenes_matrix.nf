@@ -14,6 +14,6 @@ process star_tabgenes_matrix {
 
     script:
     """
-    Rscript $workflow.projectDir/../bin/star_tabgenes_matrix.R
+    Rscript $workflow.projectDir/bin/star_tabgenes_matrix.R
     """
 }

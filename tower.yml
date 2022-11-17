@@ -1,0 +1,11 @@
+reports:
+    "**/combined/multiqc.html":
+        display: "MultiQC HTML Report"
+    "**/combined/star-fc-genecounts.txt":
+        display: "STAR alignments gene counts"
+    "**/tximport/txi_gene_counts.csv":
+        display: "Salmon alignments gene counts"
+    "**/tximport/txt_transcript_counts.csv":
+        display: "Salmon alignments transcript counts"
+    "**/tximport/txi_lengthScaledTPM_gene_counts.csv":
+        display: "Salmon alignments adjusted gene counts"

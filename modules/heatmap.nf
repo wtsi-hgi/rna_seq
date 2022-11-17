@@ -14,6 +14,6 @@ process heatmap {
 
     script:
     """
-    Rscript $workflow.projectDir/../bin/heatmap.R $count_matrix_tsv
+    Rscript $workflow.projectDir/bin/heatmap.R $count_matrix_tsv
     """
 }

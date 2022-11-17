@@ -1,0 +1,126 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://raw.githubusercontent.com/./master/nextflow_schema.json",
+    "title": "Sanger STAR-based RNASeq pipeline",
+    "description": "",
+    "type": "object",
+    "definitions": {
+        "input_output_options": {
+            "title": "Input/output options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find input data and save output data.",
+            "properties": {
+                "input_mode": {
+                    "type": "string",
+                    "fa_icon": "fas fa-angle-double-right",
+                    "description": "Choose between 'from_study_id', 'from_fastq_csv' or 'from_fastq'",
+                    "enum": [
+                        "from_study_id",
+                        "from_fastq_csv"
+                    ]
+                },
+                "input_from_fastq_csv": {
+                    "type": "object",
+                    "fa_icon": "fas fa-file-csv",
+                    "properties": {
+                        "fastq_csv": {
+                            "type": "string",
+                            "fa_icon": "fas fa-file-csv",
+                            "format": "file-path",
+                            "mimetype": "text/csv",
+                            "schema": "assets/fastq_csv_schema.json",
+                            "description": "path to csv-file pointing to fastq-files"
+                        }
+                    }
+                },
+                "input_from_study_id": {
+                    "type": "object",
+                    "fa_icon": "fas fa-address-card",
+                    "properties": {
+                        "baton_task": {
+                            "type": "object",
+                            "properties": {
+                                "study": {
+                                    "type": "string",
+                                    "fa_icon": "fas fa-bars",
+                                    "pattern": "^\\d+$",
+                                    "description": "Study in the form '5591'"
+                                }
+                            }
+                        }
+                    }
+                },
+                "outdir": {
+                    "type": "string",
+                    "fa_icon": "fas fa-folder",
+                    "format": "directory-path"
+                }
+            },
+            "required": ["input_mode", "outdir"]
+        },
+        "star_options": {
+            "title": "Tools options",
+            "type": "object",
+            "fa_icon": "fas fa-tools",
+            "description": "Define options of STAR and featureCounts.",
+            "properties": {
+                "star_aligner": {
+                    "type": "object",
+                    "title": "STAR options",
+                    "fa_icon": "fas fa-star",
+                    "properties": {
+                        "star_index": {
+                            "type": "string",
+                            "format": "directory-path",
+                            "description": "Path to STAR index",
+                            "default": "/lustre/scratch118/humgen/resources/rna_seq_genomes/star2.7.8a_index_Homo_sapiens.GRCh38.99_50bp/"
+                        },
+                        "star_downstream_tasks": {
+                            "type": "object",
+                            "fa_icon": "fas fa-calculator",
+                            "properties": {
+                                "featureCounts_task": {
+                                    "type": "object",
+                                    "title": "featureCounts options",
+                                    "description": "Choose type of reads",
+                                    "properties": {
+                                        "singleend": {
+                                            "type": "boolean",
+                                            "default": false,
+                                            "description": "Turn on if reads are single-end"
+                                        },
+                                        "unstranded": {
+                                            "type": "boolean",
+                                            "default": false,
+                                            "description": "Turn on if reads are unstranded"
+                                        },
+                                        "forward_stranded": {
+                                            "type": "boolean",
+                                            "default": false,
+                                            "description": "Turn on if reads are forward stranded"
+                                        },
+                                        "reverse_stranded": {
+                                            "type": "boolean",
+                                            "default": true,
+                                            "description": "Turn on if reads are reverse stranded"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": ["star_index", "star_downstream_tasks"]
+                }
+            }
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/star_options"
+        }
+    ]
+}

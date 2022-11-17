@@ -16,7 +16,7 @@ process baton_study_id {
 
     script:
     """
-    bash $workflow.projectDir/../bin/baton.sh ${study_id}
+    bash $workflow.projectDir/bin/baton.sh ${study_id}
     awk '!a[\$1]++' samples.tsv > samples_noduplicates.tsv 
     """
 }

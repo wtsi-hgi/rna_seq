@@ -14,6 +14,6 @@ process mapsummary {
 
     script:
     """
-    python $baseDir/../bin/mito.py -m ${params.star_aligner.star_downstream_tasks.samtools_index_idxstats_task.map_summary_task.mito_name} -t $thestats > ${samplename}_mqc.txt
+    python $baseDir/bin/mito.py -m ${params.star_aligner.star_downstream_tasks.samtools_index_idxstats_task.map_summary_task.mito_name} -t $thestats > ${samplename}_mqc.txt
     """
 }
