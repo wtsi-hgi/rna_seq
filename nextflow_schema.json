@@ -63,18 +63,63 @@
             "title": "Tools options",
             "type": "object",
             "fa_icon": "fas fa-tools",
-            "description": "Define options of STAR and featureCounts.",
+            "description": "Define options of STAR and Salmon",
             "properties": {
+                "salmon_aligner": {
+                    "type": "object",
+                    "title": "Salmon and tximport options",
+                    "fa_icon": "fas fa-fish-cooked",
+                    "description": "Configure Salmon options",
+                    "properties": {
+                        "salmon_task": {
+                            "type": "object",
+                            "title": "Salmon options",
+                            "properties": {
+                                "salmon_index": {
+                                    "type": "string",
+                                    "format": "directory-path",
+                                    "description": "Path to salmon index directory",
+                                    "default": "/lustre/scratch118/humgen/resources/rna_seq_genomes/salmon_index_Homo_sapiens.GRCh38.cdna.all/"
+                                }
+                            }
+                        },
+                        "salmon_downstream_tasks": {
+                            "type": "object",
+                            "title": "Salmon downstream options",
+                            "properties": {
+                                "tximport_task": {
+                                    "type": "object",
+                                    "title": "tximport options",
+                                    "properties": {
+                                        "ensembl_lib": {
+                                            "type": "string",
+                                            "description": "Ensemble library for tximport",
+                                            "default": "Ensembl 99 EnsDb"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "star_aligner": {
                     "type": "object",
                     "title": "STAR options",
                     "fa_icon": "fas fa-star",
+                    "description": "Configure STAR options",
                     "properties": {
                         "star_index": {
                             "type": "string",
                             "format": "directory-path",
                             "description": "Path to STAR index",
                             "default": "/lustre/scratch118/humgen/resources/rna_seq_genomes/star2.7.8a_index_Homo_sapiens.GRCh38.99_50bp/"
+                        },
+                        "gtf": {
+                            "type": "string",
+                            "format": "file-path",
+                            "pattern": "^\\S+\\.gtf$",
+                            "description": "Path to gtf file",
+                            "default": "/lustre/scratch118/humgen/resources/rna_seq_genomes/Homo_sapiens.GRCh38.99.gtf"
                         },
                         "star_downstream_tasks": {
                             "type": "object",
