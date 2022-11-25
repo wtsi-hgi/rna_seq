@@ -12,7 +12,7 @@ library(AnnotationHub)
 library(tximport)
 library(magrittr)
 library(readr)
-queries = query(AnnotationHub(), c(args[1], "Homo sapiens"))
+queries = query(AnnotationHub(), c(args[1], args[2]))
 edb = queries[[1]]
 edb
 Tx <- transcripts(edb, return.type="DataFrame")
@@ -23,7 +23,7 @@ tx2gene <- Tx[,c(9,7)]
 ##1      ENST00000387314 ENSG00000210049
 head(tx2gene)
 
-files_df = read.csv(args[2], header = FALSE)
+files_df = read.csv(args[3], header = FALSE)
 files <- file.path(files_df[,1])
 
 names(files) <- as.character(files)
