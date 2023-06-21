@@ -79,7 +79,7 @@
                                     "type": "string",
                                     "format": "directory-path",
                                     "description": "Path to salmon index directory",
-                                    "default": "/lustre/scratch118/humgen/resources/rna_seq_genomes/salmon_index_Homo_sapiens.GRCh38.cdna.all/"
+                                    "default": "/lustre/scratch125/humgen/resources/rna_seq_genomes/salmon_index_Homo_sapiens.GRCh38.cdna.all/"
                                 }
                             }
                         },
@@ -117,14 +117,14 @@
                             "type": "string",
                             "format": "directory-path",
                             "description": "Path to STAR index",
-                            "default": "/lustre/scratch118/humgen/resources/rna_seq_genomes/star2.7.8a_index_Homo_sapiens.GRCh38.99_50bp/"
+                            "default": "/lustre/scratch125/humgen/resources/rna_seq_genomes/star2.7.8a_index_Homo_sapiens.GRCh38.99_50bp/"
                         },
                         "gtf": {
                             "type": "string",
                             "format": "file-path",
                             "pattern": "^\\S+\\.gtf$",
                             "description": "Path to gtf file",
-                            "default": "/lustre/scratch118/humgen/resources/rna_seq_genomes/Homo_sapiens.GRCh38.99.gtf"
+                            "default": "/lustre/scratch125/humgen/resources/rna_seq_genomes/Homo_sapiens.GRCh38.99.gtf"
                         },
                         "star_downstream_tasks": {
                             "type": "object",
