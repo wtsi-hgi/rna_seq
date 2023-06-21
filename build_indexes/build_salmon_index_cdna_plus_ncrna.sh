@@ -1,6 +1,6 @@
 #!/bin/bash
 eval "$(conda shell.bash hook)"
-conda activate /lustre/scratch118/humgen/resources/conda/star
+conda activate /lustre/scratch115/humgen/resources/conda/star
 
 salmon index \
 -t Homo_sapiens.GRCh38.ncrna_plus_cdna.fa \
