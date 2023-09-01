@@ -161,6 +161,21 @@
                         }
                     },
                     "required": ["star_index", "star_downstream_tasks"]
+                },
+                "extract_fingerprints": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "run GATK ExtractFingerprint for each bam-file"
+                },
+                "reference_sequence": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Reference fasta file for GATK ExtractFingerprint step"
+                },
+                "haplotype_map": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "GATK HAPLOTYPE_MAP file for GATK ExtractFingerprint step"
                 }
             }
         }
