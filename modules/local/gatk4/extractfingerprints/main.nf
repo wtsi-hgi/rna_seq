@@ -9,7 +9,7 @@ process GATK4_EXTRACTFINGERPRINT {
 
     input:
         tuple val(meta), path(bam)
-        path(reference_sequence)
+        tuple path(reference_sequence), path(reference_index), path(reference_dict)
         path(haplotype_map)
 
     output:

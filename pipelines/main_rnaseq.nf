@@ -112,7 +112,7 @@ workflow main_rnaseq {
 
         EXTRACT_FINGERPRINTS(
             star_filtered_ch,
-            params.reference_sequence,
+            [params.reference_sequence, params.reference_index, params.reference_dict],
             params.haplotype_map
         )
     }
