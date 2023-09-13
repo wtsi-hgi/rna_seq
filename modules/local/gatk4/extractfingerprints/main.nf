@@ -2,6 +2,8 @@ process GATK4_EXTRACTFINGERPRINT {
     tag "$meta.id"
     label 'process_medium'
 
+    publishDir "${params.outdir}/fingerprints/", pattern: '*.vcf', mode: 'copy', overwrite: true
+
     conda "bioconda::gatk4=4.4.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/gatk4:4.4.0.0--py36hdfd78af_0':
