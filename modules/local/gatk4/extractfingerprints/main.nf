@@ -2,7 +2,8 @@ process GATK4_EXTRACTFINGERPRINT {
     tag "$meta.id"
     label 'process_medium'
 
-    publishDir "${params.outdir}/fingerprints/", pattern: '*.vcf', mode: 'copy', overwrite: true
+    publishDir "${params.outdir}/fingerprints/", pattern: '*.vcf',     mode: 'copy', overwrite: true
+    publishDir "${params.outdir}/fingerprints/", pattern: '*.vcf.idx', mode: 'copy', overwrite: true
 
     conda "bioconda::gatk4=4.4.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -15,8 +16,9 @@ process GATK4_EXTRACTFINGERPRINT {
         path(haplotype_map)
 
     output:
-        tuple val(meta), path('*.vcf'), emit: vcf
-        path "versions.yml"           , emit: versions
+        tuple val(meta), path('*.vcf')    , emit: vcf
+        tuple val(meta), path('*.vcf.idx'), emit: vcf_idx
+        path "versions.yml"               , emit: versions
 
     when:
         task.ext.when == null || task.ext.when
