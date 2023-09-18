@@ -1,0 +1,18 @@
+nextflow_process {
+    name "Test Process picard_addorreplacereadgroups"
+    script "modules/nf-core/picard/addorreplacereadgroups/main.nf"
+    process "PICARD_ADDORREPLACEREADGROUPS"
+
+    test("Should run without failures") {
+        when {
+            process {
+                """
+                input[0] = tuple [id: 'test'], "$baseDir/tests/data/GRCh38.illumina.blood.chr21-8543500.bam"
+                """
+            }
+        }
+        then {
+            assert process.success
+        }
+    }
+}

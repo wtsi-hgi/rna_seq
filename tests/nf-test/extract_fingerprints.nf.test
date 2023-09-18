@@ -1,0 +1,20 @@
+nextflow_workflow {
+    name "Test workflow EXTRACT_FINGERPRINTS"
+    script "subworkflows/local/extract_fingerprints.nf"
+    workflow "EXTRACT_FINGERPRINTS"
+
+    test("Should run without failures") {
+        when {
+            workflow {
+                """
+                input[0] = Channel.of( [id: 'test'] ).combine( Channel.of("$baseDir/tests/data/GRCh38.illumina.blood.chr21-8543500.bam") )
+                input[1] = Channel.of("$baseDir/tests/data/Homo_sapiens.GRCh38.chr21-8543500.fa")
+                input[2] = Channel.of("$baseDir/tests/data/haplotype.map")
+                """
+            }
+        }
+        then {
+            assert workflow.success
+        }
+    }
+}
