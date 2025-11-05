@@ -1,14 +1,9 @@
-# RNAseq pipeline
+# RNASeq pipeline
 
-[![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A522.08-brightgreen.svg)](https://www.nextflow.io/)
-[![nf-test](https://img.shields.io/badge/tested_with-nf--test-337ab7.svg)](https://github.com/askimed/nf-test)
+The RNASeq pipeline, maintained by HGI.
 
+Originally based on the [NF-Core RNASeq pipeline](https://github.com/nf-core/rnaseq),
+it contains additional analysis modules extending the original pipeline.
 
-This is: 
-* the old pipeline used to run davenport group data
-* created by ip13 by cloning code created by gn5 and maintained by ad7
-* kept here for continuity of processing
-* should only be used for historical continuity
-* new RNA projects should use modern nf-core pipeline: https://github.com/nf-core/rnaseq
+The pipeline is actively used in the DavLab for all data processing and analysis.
 
-This pipeline is ment to be run in Nextflow Tower.
