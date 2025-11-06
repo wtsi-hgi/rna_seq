@@ -1,0 +1,25 @@
+name: conda_rna_seq
+channels:
+  - defaults
+  - conda-forge
+  - bioconda
+  - anaconda
+dependencies:
+  - python>=3.4
+  - r-base>=4
+  - bioconductor-tximport 
+  - bioconductor-annotationhub
+  - bioconductor-ensembldb
+  - r-magrittr 
+  - r-readr 
+  - star
+  - subread
+  - salmon
+  - multiqc
+  - tabix
+  - bcftools
+  - samtools
+  - regtools
+  - pandas
+  - click
+  - fastqc
