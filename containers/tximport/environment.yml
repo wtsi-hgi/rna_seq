@@ -1,0 +1,11 @@
+name: conda_rnaseq_tximport
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base>=4
+  - bioconductor-tximport 
+  - bioconductor-annotationhub
+  - bioconductor-ensembldb
+  - r-magrittr 
+  - r-readr
