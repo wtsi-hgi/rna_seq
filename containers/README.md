@@ -22,7 +22,7 @@ The versions are saved during docker build in container file `/usr/conda_softwar
 (`docker run wtsihgi/rna_seq:1.2 cat /usr/conda_software_versions.txt`)
 
 docker tag **1.2**:
-No info recorded, TBD:
+No info recorded, TBD.
 
 docker tag **1.1** adds fastqc and updates Python:
 
@@ -43,12 +43,34 @@ R version 4.0.3 with libpath "/opt/conda/envs/conda_rna_seq/lib/R/library"
 Python 3.9.2 (/opt/conda/envs/conda_rna_seq/bin/python)
 ```
 
-##### Dockerhub auto-build:  
+## Building images
+
+### Dockerhub auto-build:  
 see https://hub.docker.com/repository/docker/wtsihgi/rna_seq
 
-##### Docker manual build:
+### RNASeq container build on Sanger farm
 
+The docker containers building on the Farm don't work.
+Therefore, to build containers, you should use an OpenStack VM
+with Singularity and Docker installed.
+
+```bash
+docker build --tag local/rna_seq_tximport:1.2 .
+singularity build rna_seq_tximport_1.2.sif docker-daemon://local/rna_seq_tximport:1.2
 ```
+
+
+### TxImport manual build and push
+
+```bash
+docker build --tag wtsihgi/rna_seq_tximport:1.2 .
+docker image ls
+#docker image tag e682162f5052 wtsihgi/rna_seq:1.1
+```
+
+### rna_seq Docker manual build:
+
+```bash
 docker build . # or docker build --tag wtsihgi/rna_seq:1.1 .
 docker image ls
 docker image tag e682162f5052 wtsihgi/rna_seq:1.1
@@ -65,7 +87,7 @@ docker run wtsihgi/rna_seq:1.1 cat /usr/conda_software_versions.txt
 docker run wtsihgi/rna_seq:1.1 printenv
 ```
 
-##### Convert docker image to singularity:
+### Convert docker image to singularity:
 
 ```
 ## option 1 (pull first):

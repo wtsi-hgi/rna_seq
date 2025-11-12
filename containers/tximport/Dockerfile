@@ -30,8 +30,8 @@ ADD environment.yml /tmp/environment.yml
 RUN mamba env create -f /tmp/environment.yml
 
 # Set installed Conda env as default:
-ENV CONDA_DEFAULT_ENV $conda_env
-ENV PATH /opt/conda/envs/$conda_env/bin:$PATH
+ENV CONDA_DEFAULT_ENV=$conda_env
+ENV PATH=/opt/conda/envs/$conda_env/bin:$PATH
 RUN echo $PATH
 
 # check bin  folder:
@@ -46,4 +46,4 @@ RUN Rscript -e ".libPaths()" >> /usr/conda_software_versions.txt
 RUN which python >> /usr/conda_software_versions.txt && python --version >> /usr/conda_software_versions.txt
 RUN cat /usr/conda_software_versions.txt
 
-CMD /bin/sh
+CMD ["/bin/sh"]
