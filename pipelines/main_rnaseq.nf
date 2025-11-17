@@ -50,7 +50,6 @@ workflow main_rnaseq {
     // salmon aligner tasks:
 
     salmon(ch_samplename_crams, ch_salmon_index.collect())
-    salmon.out[0].view { c -> " === Salmon quant results: $c" }
     tximport(salmon.out[0].collect())
     merge_salmoncounts(salmon.out[0].collect(), salmon.out[1].collect())
     // TODO: check if still works: heatmap(merge_salmoncounts.out[0].map{transcounts,transtpm,genecouts,genetpm-> genecouts})
