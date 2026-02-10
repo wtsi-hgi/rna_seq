@@ -1,0 +1,116 @@
+{
+  "input_mode": "from_fastq_csv",
+
+  "reference_sequence": "/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/data/Homo_sapiens.GRCh38.dna.primary_assembly.fa",
+  "reference_index":    "/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/data/Homo_sapiens.GRCh38.dna.primary_assembly.fa.fai",
+  "reference_dict":     "/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/data/Homo_sapiens.GRCh38.dna.primary_assembly.dict",
+  "gtf":                "/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/data/Homo_sapiens.GRCh38.111.gtf.test",
+  
+
+  "input_from_fastq_csv": {
+    "fastq_csv": "/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/samplesheet_test.csv",
+    "test": "test",
+    "run": true
+  },
+
+  "aligner": "star_salmon",
+
+  "salmon_aligner": {
+    "salmon_task": {
+      "run": true,
+      "salmon_index": "/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/data/salmon-1.4.0_index_Homo_sapiens.GRCh38.cdna_plus_ncrna.all"
+    },
+
+    "salmon_downstream_tasks": {
+      "tximport_task": {
+        "run": true,
+        "ensembl_lib": "Ensembl 111 EnsDb",
+        "ensembl_species": "Homo sapiens"
+      },
+      "merge_salmoncounts_task": {
+        "run": true
+      },
+      "heatmap_task": {
+        "run": true
+      },
+      "deseq2_task": {
+        "run": false
+      }
+    }
+  },
+
+
+  "star_aligner": {
+    "star_index": "/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/data/star-2.7.8a_index_Homo_sapiens.GRCh38.111_100bp",
+    "gtf":        "/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/data/Homo_sapiens.GRCh38.111.gtf",
+    "star_2pass_basic_task": {
+      "run": false,
+      "star_tabgenes_matrix_task": {
+        "run": false
+      }
+    },
+    "star_custom_2pass_task": {
+      "run_1st_pass": true,
+      "run_merge_junctions": true,
+      "run_2nd_pass": true
+    },
+    "star_downstream_tasks": {
+      "downstream_outputs": "star_custom_2pass",
+      "filter_star_aln_rate_task": {
+        "run": true,
+        "min_pct_aln": 5
+      },
+      "featureCounts_task": {
+        "run": true,
+        "singleend": false,
+        "unstranded": false,
+        "forward_stranded": false,
+        "reverse_stranded": true,
+        "fcextra": " --countReadPairs",
+        "merge_featureCounts_task": {
+          "run": true
+        }
+      },
+      "samtools_index_idxstats_task": {
+        "run": true,
+        "map_summary_task": {
+          "run": true,
+          "mito_name": "MT"
+        }
+      },
+      "leafcutter_tasks": {
+        "bam2junc_regtools_task": {
+          "run": true
+        },
+        "clustering_regtools_task": {
+          "run": true
+        }
+      },
+      "mbv_task": {
+        "run": true,
+        "mbv_vcf_gz":    "/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/vacxin.joint_germline.nochr.exome.vcf.gz",
+        "mbv_vcf_gz_csi":"/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/vacxin.joint_germline.nochr.exome.vcf.gz.csi"
+      }
+    }
+  },
+  
+  "extract_fingerprints": true,
+  "haplotype_map": "/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/hg38_v0_Homo_sapiens_assembly38.haplotype_database.nochr.txt",
+  "crams_to_fastq_gz_task": {
+    "run": true,
+    "min_reads": 500
+  },
+  "fastqc_task": {
+    "run": true
+  },
+  "get_egan_id_task": {
+    "run": false
+  },
+  "multiqc_task": {
+    "run": true
+  },
+  "copy_mode": "rellink",
+  "copy_mode_fastaq": "copy",
+  "on_complete_remove_workdir_failed_tasks": false,
+  "on_complete_remove_workdir_notsymlinked_in_results": false
+}

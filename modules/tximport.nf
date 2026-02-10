@@ -21,13 +21,14 @@ process tximport {
 
     script:
     """
-    ls . | grep .quant.sf\$ > fofn_quantfiles.txt
-    mkdir -p tmp_r
-    export TMPDIR=./tmp_r
+    export HOME=\$(pwd)
+    ls . | grep .quant.sf\$ > \$HOME/fofn_quantfiles.txt
+    mkdir -p \$HOME/tmp_r
+    export TMPDIR=$HOME/tmp_r
     Rscript $workflow.projectDir/bin/tximport.R \
         \"${params.salmon_aligner.salmon_downstream_tasks.tximport_task.ensembl_lib}\" \
         \"${params.salmon_aligner.salmon_downstream_tasks.tximport_task.ensembl_species}\" \
-        fofn_quantfiles.txt
-    rm -r ./tmp_r    
+        \$HOME/fofn_quantfiles.txt
+    rm -r \$HOME/tmp_r    
     """
 }
