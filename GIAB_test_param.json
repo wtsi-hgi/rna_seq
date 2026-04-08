@@ -8,7 +8,7 @@
   
 
   "input_from_fastq_csv": {
-    "fastq_csv": "/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/samplesheet_test.csv",
+    "fastq_csv": "/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/samplesheet_test_GIAB.csv",
     "test": "test",
     "run": true
   },
@@ -87,9 +87,9 @@
         }
       },
       "mbv_task": {
-        "run": false,
-        "mbv_vcf_gz":    "/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/vacxin.joint_germline.nochr.exome.vcf.gz",
-        "mbv_vcf_gz_csi":"/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/vacxin.joint_germline.nochr.exome.vcf.gz.csi"
+        "run": true,
+        "mbv_vcf_gz":    "/lustre/scratch125/humgen/teams_v2/hgi/ad7/rna_seq_hgi/giab_multi_sample_filtered.vcf.gz",
+        "mbv_vcf_gz_csi":"/lustre/scratch125/humgen/teams_v2/hgi/ad7/rna_seq_hgi/giab_multi_sample_filtered.vcf.gz.tbi"
       }
     }
   },

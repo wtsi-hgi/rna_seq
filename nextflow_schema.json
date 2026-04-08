@@ -94,12 +94,12 @@
                                         "ensembl_lib": {
                                             "type": "string",
                                             "description": "Ensemble library for tximport",
-                                            "default": "Ensembl 99 EnsDb"
+                                            "default": "115"
                                         },
                                         "ensembl_species": {
                                             "type": "string",
                                             "description": "Species of Ensemble library",
-                                            "default": "Homo sapiens"
+                                            "default": "hsapiens"
                                         }
                                     }
                                 }

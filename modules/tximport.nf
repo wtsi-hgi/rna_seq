@@ -25,7 +25,7 @@ process tximport {
     ls . | grep .quant.sf\$ > \$HOME/fofn_quantfiles.txt
     mkdir -p \$HOME/tmp_r
     export TMPDIR=$HOME/tmp_r
-    Rscript $workflow.projectDir/bin/tximport.R \
+    Rscript $workflow.projectDir/bin/tximport_ens.R \
         \"${params.salmon_aligner.salmon_downstream_tasks.tximport_task.ensembl_lib}\" \
         \"${params.salmon_aligner.salmon_downstream_tasks.tximport_task.ensembl_species}\" \
         \$HOME/fofn_quantfiles.txt
