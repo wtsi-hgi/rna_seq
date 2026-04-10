@@ -88,8 +88,8 @@
       },
       "mbv_task": {
         "run": true,
-        "mbv_vcf_gz":    "/lustre/scratch125/humgen/teams_v2/hgi/ad7/rna_seq_hgi/giab_multi_sample_filtered.vcf.gz",
-        "mbv_vcf_gz_csi":"/lustre/scratch125/humgen/teams_v2/hgi/ad7/rna_seq_hgi/giab_multi_sample_filtered.vcf.gz.tbi"
+        "mbv_vcf_gz":    "/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/data/GIAB_rnaseq/giab_multi_sample_filtered.vcf.gz",
+        "mbv_vcf_gz_csi":"/lustre/scratch125/humgen/resources_v2/ref/Homo_sapiens/RNASeq/data/GIAB_rnaseq/giab_multi_sample_filtered.vcf.gz.tbi"
       }
     }
   },
