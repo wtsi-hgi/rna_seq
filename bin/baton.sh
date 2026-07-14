@@ -15,7 +15,7 @@ jq --arg study_id $study_id -n '{avus: [
        {attribute: "study_id", value: $study_id, o: "="}, 
        {attribute: "manual_qc", value: "1", o: "="}, 
       {attribute: "target", value: "1", o: "="}]}' |\
-baton-metaquery \
+/software/sciops/pkgg/baton/4.0.1/bin/baton-metaquery \
 		--zone seq --obj --avu |\
 jq '.[] as $a| 
 "\($a.avus | .[] | select(.attribute == "sample") | .value)____\($a.avus | .[] | select(.attribute == "sample_supplier_name") | .value)____\($a.avus | .[] | select(.attribute == "id_run") | .value)____\($a.avus | .[] | select(.attribute == "is_paired_read") | .value)____\($a.avus | .[] | select(.attribute == "study_id") | .value)____\($a.avus | .[] | select(.attribute == "study") | .value)"' |\
